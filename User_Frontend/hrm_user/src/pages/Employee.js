@@ -1,32 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
 import exp from "../assets/exp-icon.png";
 import quali from "../assets/quali-icon.png";
+import { getEmployeeDetails } from "../Services/RestApiCalls";
 
 const Employee = () => {
   const [employee, setemployee] = useState({
-    firstName: "Lakmini",
-    LastName: "Theekshana",
-    fullName: "Lakmini theekshan",
-    gender: "female",
-    personalMail: "lakmini@gmail.com",
-    mobileNumber: "077-8707845",
-    userName: "Lakmini",
-    workMail: "lakmini@diana.lk",
-    contractType: "Permenant",
-    department: "Human resources",
-    position: "Manager",
-    salary: 100000,
-    startDate: "2024-03-05",
-    epfNum: "1325-344-565",
-    dob: "1999-03-8",
-    marialStatus: "single",
-    address: "143/1, Samapath Uyana, Kirbathgoda",
-    spouseName: "",
-    fatherName: "Amal Karunarathne",
-    motherName: "jayani karunathne",
-    emergencyNum: "077-5804567",
+    //   firstName: "Lakmini",
+    //   lastName: "Theekshana",
+    //   fullName: "Lakmini theekshan",
+    //   gender: "female",
+    //   personalMail: "lakmini@gmail.com",
+    //   mobileNumber: "077-8707845",
+    //   userName: "Lakmini",
+    //   workMail: "lakmini@diana.lk",
+    //   contractType: "Permenant",
+    //   department: "Human resources",
+    //   position: "Manager",
+    //   salary: 100000,
+    //   joinedDate: "2024-03-05",
+    //   epfNo: "1325-344-565",
+    //   dob: "1999-03-8",
+    //   maritalStatus: "single",
+    //   address: "143/1, Samapath Uyana, Kirbathgoda",
+    //   spouseName: "",
+    //   fatherName: "Amal Karunarathne",
+    //   motherName: "jayani karunathne",
+    //   emergencyNum: "077-5804567",
   });
+
+  const fetchEmployee = async () => {
+    const fetched = await getEmployeeDetails();
+    setemployee(fetched);
+  };
+
+  useEffect(() => {
+    fetchEmployee();
+  }, []);
 
   const [experience, setExperience] = useState([
     {
@@ -89,7 +99,7 @@ const Employee = () => {
           <div className="flex bg-[#6a44d9] pl-10 pt-5 md:w-[96.4%] md:h-[100px] mt-10 rounded-t-xl">
             <div className="flex flex-col">
               <div className="w-[655.97px] text-white text-[35px] font-semibold">
-                {employee.fullName}
+                {employee.firstName} {employee.lastName}
               </div>
               <div className="w-[130.12px] text-white text-xs font-medium">
                 {employee.position}
@@ -98,7 +108,7 @@ const Employee = () => {
           </div>
           <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] md:h-[96vh] rounded-b-xl">
             <div className="flex flex-row gap-x-16">
-              <div className="flex flex-col w-[46%] h-64 border-2 rounded-md border-black">
+              <div className="flex flex-col w-[46%] h-72 border-2 rounded-md border-black">
                 <div className="text-black text-xl font-semibold px-5 py-4">
                   Basic Information
                 </div>
@@ -112,12 +122,14 @@ const Employee = () => {
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Last Name</div>
                     <div>:</div>
-                    <div>{employee.LastName}</div>
+                    <div>{employee.lastName}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Full Name</div>
                     <div>:</div>
-                    <div>{employee.fullName}</div>
+                    <div>
+                      {employee.firstName} {employee.lastName}
+                    </div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Gender</div>
@@ -125,37 +137,37 @@ const Employee = () => {
                     <div>{employee.gender}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
-                    <div className="w-[140px]">Personal E-mail</div>
+                    <div className="w-[140px]">Home phone number</div>
                     <div>:</div>
-                    <div>{employee.personalMail}</div>
+                    <div>{employee.homePhoneNo}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Mobile Number</div>
                     <div>:</div>
-                    <div>{employee.mobileNumber}</div>
+                    <div>{employee.mobilePhoneNo}</div>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-[46%] h-64 border-2 rounded-md border-black">
+              <div className="flex flex-col w-[46%] h-72 border-2 rounded-md border-black">
                 <div className="text-black text-xl font-semibold px-5 py-4">
                   Work information
                 </div>
                 {/* Information */}
                 <div className="grid grid-col-1 gap-y-2">
                   <div className="flex flex-row px-5 gap-x-[20%]">
-                    <div className="w-[140px]">User Name</div>
+                    <div className="w-[140px]">NIC</div>
                     <div>:</div>
-                    <div>{employee.userName}</div>
+                    <div>{employee.nic}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Work Email</div>
                     <div>:</div>
-                    <div>{employee.workMail}</div>
+                    <div>{employee.workEmail}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Contract Type</div>
                     <div>:</div>
-                    <div>{employee.contractType}</div>
+                    <div>{employee.employmentType}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Department</div>
@@ -168,15 +180,20 @@ const Employee = () => {
                     <div>{employee.position}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
+                    <div className="w-[140px]">Joined date</div>
+                    <div>:</div>
+                    <div>{employee.joinedDate}</div>
+                  </div>
+                  <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Salary</div>
                     <div>:</div>
-                    <div>{employee.salary}</div>
+                    <div>{employee.basicSalary}</div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex flex-row gap-x-4 mt-5">
-              <div className="flex flex-col w-[46%] min-h-[22rem] border-2 rounded-md border-black">
+              <div className="flex flex-col w-[46%] min-h-[20rem] border-2 rounded-md border-black">
                 <div className="text-black text-xl font-semibold px-5 py-4">
                   Personal information
                 </div>
@@ -186,6 +203,11 @@ const Employee = () => {
                     <div className="w-[140px]">Date of Birth</div>
                     <div>:</div>
                     <div>{employee.dob}</div>
+                  </div>
+                  <div className="flex flex-row px-5 gap-x-[20%]">
+                    <div className="w-[140px]">Age</div>
+                    <div>:</div>
+                    <div>{employee.age}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Marital status</div>
@@ -212,15 +234,11 @@ const Employee = () => {
                     <div>:</div>
                     <div>{employee.motherName}</div>
                   </div>
-                  <div className="flex flex-row px-5 gap-x-[20%]">
-                    <div className="w-[140px]">Emergency Contact</div>
-                    <div>:</div>
-                    <div>{employee.emergencyNum}</div>
-                  </div>
+
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">EPF Number</div>
                     <div>:</div>
-                    <div>{employee.epfNum}</div>
+                    <div>{employee.epfNo}</div>
                   </div>
                 </div>
               </div>
