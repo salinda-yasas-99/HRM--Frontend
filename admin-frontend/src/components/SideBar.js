@@ -7,6 +7,7 @@ import emp from "../assets/emp.png";
 import leaves from "../assets/leaves.png";
 import logout from "../assets/logout.png";
 import payrole from "../assets/payrole.png";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ activetab, onTabChange }) => {
   const [isEmployeeDropdownOpen, setEmployeeDropdownOpen] = useState(false);
@@ -23,6 +24,8 @@ const Sidebar = ({ activetab, onTabChange }) => {
     { name: "Leaves", imgSrc: attd },
   ];
 
+  const navigate = useNavigate();
+
   const handleEmployeeClick = () => {
     setEmployeeDropdownOpen(!isEmployeeDropdownOpen);
   };
@@ -35,7 +38,8 @@ const Sidebar = ({ activetab, onTabChange }) => {
     // Clear the token from local storage
     localStorage.removeItem("token");
     localStorage.removeItem("workEmail");
-    window.location.href = "/";
+    localStorage.removeItem("uid");
+    navigate("/");
   };
 
   return (

@@ -91,12 +91,13 @@ const Departments = () => {
                   departments.map((dept, key) => {
                     return (
                       <tr
-                        id={key}
+                        id={dept.departmentId}
                         className="bg-white border-b text-gray-900 font-medium"
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           {dept.departmentName}
                         </td>
+
                         <td className="px-6 py-4">{dept.departmentDesc}</td>
                         <td className="px-6 py-4">
                           {dept.departmentHead

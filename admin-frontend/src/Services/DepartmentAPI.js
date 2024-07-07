@@ -16,7 +16,7 @@ export const getAllDepartments = async () => {
   });
   try {
     const response = await authAxios.get(
-      "http://localhost:8080/api/v1/position/all"
+      "http://localhost:8080/api/v1/department/all"
     );
     console.log(response);
     return response.data;

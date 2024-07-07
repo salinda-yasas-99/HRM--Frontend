@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import lock from "../assets/lock.png";
 import { logUser } from "../Services/RestApiCalls";
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [workEmail, setEmail] = useState("");
@@ -10,6 +11,8 @@ const LogIn = () => {
   const [emailError, setEmailError] = useState("");
 
   const user = { workEmail, password };
+
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +28,7 @@ const LogIn = () => {
 
     try {
       await logUser(user);
+      navigate("admin/dashboard");
     } catch (error) {
       console.error("Login Error:", error);
     }
