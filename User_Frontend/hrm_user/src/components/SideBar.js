@@ -7,6 +7,7 @@ import emp from "../assets/emp.png";
 import leaves from "../assets/leaves.png";
 import logout from "../assets/logout.png";
 import payrole from "../assets/payrole.png";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ activetab, onTabChange }) => {
   const Tabs = [
@@ -16,6 +17,16 @@ const Sidebar = ({ activetab, onTabChange }) => {
     { name: "Payrole", imgSrc: payrole },
     { name: "Attendance", imgSrc: attd },
   ];
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear the token from local storage
+    localStorage.removeItem("token");
+    localStorage.removeItem("workEmail");
+    localStorage.removeItem("uid");
+    navigate("/");
+  };
 
   return (
     <aside
@@ -41,7 +52,10 @@ const Sidebar = ({ activetab, onTabChange }) => {
               </Link>
             </li>
           ))}
-          <button className="flex items-center w-[200px] p-2 text-[#013a63] pl-7 pr-7 rounded-lg hover:bg-[#e3f2fd] font-medium">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-[200px] p-2 text-[#013a63] pl-7 pr-7 rounded-lg hover:bg-[#e3f2fd] font-medium"
+          >
             <img src={logout} w-5 h-5 alt="logout" />
             <span className="ms-3">Logout</span>
           </button>
