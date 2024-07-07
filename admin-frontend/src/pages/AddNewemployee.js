@@ -158,11 +158,11 @@ const AddNewemployee = () => {
 
     console.log("Form Data:", employee);
 
-    // try {
-    //   await AddNewEmployee(employee);
-    // } catch (error) {
-    //   console.error("Login Error:", error);
-    // }
+    try {
+      await AddNewEmployee(employee);
+    } catch (error) {
+      console.error("Login Error:", error);
+    }
   };
 
   const handleQualificationSubmit = async (qualification) => {

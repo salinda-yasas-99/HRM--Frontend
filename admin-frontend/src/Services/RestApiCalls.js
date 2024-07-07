@@ -154,9 +154,10 @@ export const AddNewEmployee = async (employee) => {
 
     const response = await authAxios.post(url, NewEmployee);
     console.log(response);
-    return alert(response.data);
+    return alert(response.message);
   } catch (err) {
     console.log("This is error", err);
+    alert("Error occured");
     throw err;
   }
 };
