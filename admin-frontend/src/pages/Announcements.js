@@ -20,7 +20,23 @@ const Announcements = () => {
   useEffect(() => {
     const fetchAnnouncemnts = async () => {
       const fetched = await getAllAnnouncements();
-      setAnnouncement(fetched);
+      setAnnouncement([
+        {
+          subject: "Announcement 1",
+          date: "2024-07-01",
+          message: "This is the first announcement message.",
+        },
+        {
+          subject: "Announcement 2",
+          date: "2024-07-02",
+          message: "This is the second announcement message.",
+        },
+        {
+          subject: "Announcement 3",
+          date: "2024-07-03",
+          message: "This is the third announcement message.",
+        },
+      ]);
     };
 
     fetchAnnouncemnts();
