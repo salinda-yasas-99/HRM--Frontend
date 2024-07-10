@@ -4,39 +4,27 @@ import { getAllAnnouncements } from "../Services/AnnouncementApi";
 
 const Announcements = () => {
   const [announcement, setAnnouncement] = useState();
-  //  [ {
-  //     Title: "Cricket Match",
-  //     Content: "Annual crickt match",
-  //   },
-  //   {
-  //     Title: "Blood Donation Camp",
-  //     Content: "Annual blood donation camp",
-  //   },
-  //   {
-  //     Title: "Annual Piritha",
-  //     Content: "Annual Piritha",
-  //   },]
+
+  // {
+  //   subject: "Announcement 1",
+  //   date: "2024-07-01",
+  //   message: "This is the first announcement message.",
+  // },
+  // {
+  //   subject: "Announcement 2",
+  //   date: "2024-07-02",
+  //   message: "This is the second announcement message.",
+  // },
+  // {
+  //   subject: "Announcement 3",
+  //   date: "2024-07-03",
+  //   message: "This is the third announcement message.",
+  // },
 
   useEffect(() => {
     const fetchAnnouncemnts = async () => {
       const fetched = await getAllAnnouncements();
-      setAnnouncement([
-        {
-          subject: "Announcement 1",
-          date: "2024-07-01",
-          message: "This is the first announcement message.",
-        },
-        {
-          subject: "Announcement 2",
-          date: "2024-07-02",
-          message: "This is the second announcement message.",
-        },
-        {
-          subject: "Announcement 3",
-          date: "2024-07-03",
-          message: "This is the third announcement message.",
-        },
-      ]);
+      setAnnouncement(fetched);
     };
 
     fetchAnnouncemnts();
