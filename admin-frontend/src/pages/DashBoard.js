@@ -32,7 +32,7 @@ const DashBoard = () => {
             <LeaveCountCard leaveCount={5} />
           </div>
         </div>
-        <div className="flex gap-x-2 justify-around bg-white p-10  md:w-[96.4%] mt-10 rounded-xl">
+        <div className="flex gap-x-2 justify-around bg-white p-10  md:w-[96.4%] my-10 rounded-xl">
           <EmployeesByDepartmentChart />
           <div className="w-1 bg-[#cfe0fa] h-full"></div>
           <EmptyPositionsChart />
