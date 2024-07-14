@@ -1,78 +1,176 @@
 import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
-import { getAllAnnouncements } from "../Services/AnnouncementApi";
+import {
+  deleteeAnnouncement,
+  getAllAnnouncements,
+  postAnnouncement,
+  updateAnnouncement,
+} from "../Services/AnnouncementApi";
+import Loading from "../components/common/Loading";
+import AnnouncementCard from "../components/announcements/AnnouncementCard";
+import EmptyImg from "../assets/empty.png";
+import AnnouncementModal from "../components/announcements/AnnouncementModal";
+import AnnouncementDeleteModal from "../components/announcements/AnnouncementDeleteModal";
 
 const Announcements = () => {
-  const [announcement, setAnnouncement] = useState();
+  const [announcements, setAnnouncements] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [announcementModalData, setAnnouncementModalData] = useState({
+    announcementId: null,
+    subject: null,
+    expiresOn: null,
+    content: null,
+  });
 
-  // {
-  //   subject: "Announcement 1",
-  //   date: "2024-07-01",
-  //   message: "This is the first announcement message.",
-  // },
-  // {
-  //   subject: "Announcement 2",
-  //   date: "2024-07-02",
-  //   message: "This is the second announcement message.",
-  // },
-  // {
-  //   subject: "Announcement 3",
-  //   date: "2024-07-03",
-  //   message: "This is the third announcement message.",
-  // },
+  const setInitialAnnouncementModalData = () => {
+    setAnnouncementModalData({
+      announcementId: null,
+      subject: null,
+      expiresOn: null,
+      content: null,
+    });
+  };
+
+  const handleOpenAnnouncementModal = () => {
+    setIsAnnouncementModalOpen(true);
+  };
+
+  const handleCloseAnnouncementModal = () => {
+    setInitialAnnouncementModalData();
+    setIsEditMode(false);
+    setIsAnnouncementModalOpen(false);
+  };
+
+  const handleCloseAnnouncementDeleteModal = () => {
+    setInitialAnnouncementModalData();
+    setIsDeleteModalOpen(false);
+  };
+
+  const saveNewAnnouncement = async (data) => {
+    try {
+      const response = await postAnnouncement(data);
+      fetchAnnouncemnts();
+      handleCloseAnnouncementModal();
+    } catch (error) {
+      console.error("Error saving announcement:", error);
+    }
+  };
+
+  const updateExistingAnnouncement = async (data) => {
+    try {
+      const response = await updateAnnouncement(data);
+      fetchAnnouncemnts();
+      handleCloseAnnouncementModal();
+    } catch (error) {
+      console.error("Error updating announcement:", error);
+    }
+  };
+
+  const deleteExistingAnnouncement = async (announcementId) => {
+    try {
+      const response = await deleteeAnnouncement(announcementId);
+      fetchAnnouncemnts();
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+    }
+  };
+
+  const fetchAnnouncemnts = async () => {
+    setIsLoading(true);
+    try {
+      const fetched = await getAllAnnouncements();
+      setAnnouncements(fetched);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAnnouncemnts = async () => {
-      const fetched = await getAllAnnouncements();
-      setAnnouncement(fetched);
-    };
-
     fetchAnnouncemnts();
   }, []);
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
         <Welcome name="Welcome Lakmini" tab="Announcements" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
-          <div className="bg-[#013a63] p-3 rounded-lg text-white font-medium">
+          <button
+            type="button"
+            className="focus:outline-none text-white bg-[#013a63] hover:bg-[#0f283a] focus:ring-4 focus:ring-[#013a63] rounded-lg  px-5 py-3 mb-2"
+            onClick={handleOpenAnnouncementModal}
+          >
             Add Announcement
-          </div>
+          </button>
         </div>
-        {/* notice map */}
-        {announcement !== undefined ? (
-          announcement.map((announ, key) => {
+        {isLoading && <Loading />}
+        {!isLoading && announcements?.length === 0 && (
+          <div className="flex flex-col items-center gap-1 md:w-[96.4%] my-[25px]">
+            <img src={EmptyImg} alt="empty-img" />
+            <div className="text-gray-500 text-center mt-5">
+              No announcements available.
+            </div>
+          </div>
+        )}
+        {!isLoading &&
+          announcements?.length > 0 &&
+          announcements?.map((announ) => {
             return (
               <div
-                id={key}
-                className="flex flex-col md:w-[96.4%] mt-[25px] bg-[#d7e7fa] min-h-[220px] px-5 pb-4 rounded-md"
+                key={announ.announcementId}
+                className="flex flex-col md:w-[96.4%] my-[15px] bg-[#d7e7fa] min-h-[220px] px-5 p-4 rounded-md"
               >
-                <h1 className="text-sky-900 font-bold">
-                  {announ.subject} -{announ.date}
-                </h1>
-                <div className="bg-white mt-4 rounded-md w-full min-h-[100px] p-4">
-                  {announ.message}
-                </div>
-                <div className="flex flex-row mt-4 justify-end gap-x-5">
-                  <div className="bg-[#497cc9] py-2 px-5 rounded-lg text-white font-medium">
+                <AnnouncementCard
+                  subject={announ.subject}
+                  date={announ.expiresOn}
+                  message={announ.content}
+                />
+                <div className="flex flex-row mt-1 justify-end gap-x-5">
+                  <button
+                    type="button"
+                    className="bg-[#497cc9] py-2 px-5 rounded-lg text-white font-medium"
+                    onClick={() => {
+                      setAnnouncementModalData(announ);
+                      setIsEditMode(true);
+                      handleOpenAnnouncementModal();
+                    }}
+                  >
                     Edit
-                  </div>
-                  <div className="bg-[#ed1b24] py-2 px-5 rounded-lg text-white font-medium">
+                  </button>
+                  <button
+                    type="button"
+                    className="bg-[#ed1b24] py-2 px-5 rounded-lg text-white font-medium"
+                    onClick={() => {
+                      setAnnouncementModalData(announ);
+                      setIsDeleteModalOpen(true);
+                    }}
+                  >
                     Delete
-                  </div>
+                  </button>
                 </div>
               </div>
-              // comment
             );
-          })
-        ) : (
-          <tr>
-            <td
-              colSpan="7"
-              className="px-6 py-4 text-center text-gray-500 font-bold"
-            >
-              Currently no announcements
-            </td>
-          </tr>
+          })}
+        {isAnnouncementModalOpen && (
+          <AnnouncementModal
+            handleCancelModal={handleCloseAnnouncementModal}
+            announcement={announcementModalData}
+            setAnnouncement={setAnnouncementModalData}
+            saveNewAnnouncement={saveNewAnnouncement}
+            updateExistingAnnouncement={updateExistingAnnouncement}
+            isEditMode={isEditMode}
+          />
+        )}
+        {isDeleteModalOpen && (
+          <AnnouncementDeleteModal
+            closeModal={handleCloseAnnouncementDeleteModal}
+            announcement={announcementModalData}
+            deleteAnnouncement={deleteExistingAnnouncement}
+          />
         )}
       </div>
     </div>

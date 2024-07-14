@@ -1,11 +1,5 @@
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
-});
-
-export default API;
-
 export const getAllAnnouncements = async () => {
   const Token = localStorage.getItem("token");
   const authAxios = axios.create({
@@ -15,7 +9,9 @@ export const getAllAnnouncements = async () => {
     withCredentials: true,
   });
   try {
-    const response = await authAxios.get("/announcemnts");
+    const response = await authAxios.get(
+      `http://localhost:8080/api/v1/announcement`
+    );
     console.log(response);
     return response.data;
   } catch (err) {

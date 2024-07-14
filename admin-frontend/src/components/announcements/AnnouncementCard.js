@@ -1,7 +1,7 @@
 import React from "react";
-import AnnouncementImg from "../../assets/announcement/announcement.png";
+import AnnouncementImg from "../../assets/announcement.png";
 
-const AnnouncementCard = ({ subject, date, message }) => {
+const AnnouncementCard = ({ subject, message, date }) => {
   return (
     <div
       id="alert-additional-content-1"

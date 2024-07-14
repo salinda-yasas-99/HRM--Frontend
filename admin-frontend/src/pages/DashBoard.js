@@ -34,7 +34,7 @@ const DashBoard = () => {
         </div>
         <div className="flex gap-x-2 justify-around bg-white p-10  md:w-[96.4%] my-10 rounded-xl">
           <EmployeesByDepartmentChart />
-          <div className="w-1 bg-[#cfe0fa] h-full"></div>
+          <div className="w-1 bg-[#cfe0fa] h-100"></div>
           <EmptyPositionsChart />
         </div>
       </div>

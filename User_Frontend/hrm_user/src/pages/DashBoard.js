@@ -9,32 +9,16 @@ import { getAllAnnouncements } from "../Services/AnnouncementService";
 import EmptyImg from "../assets/announcement/empty.png";
 
 const DashBoard = () => {
-  const [announcements, setAnnouncements] = useState([
-    {
-      subject: "Announcement 1",
-      date: "2024-07-01",
-      message: "This is the first announcement message.",
-    },
-    {
-      subject: "Announcement 2",
-      date: "2024-07-02",
-      message: "This is the second announcement message.",
-    },
-    {
-      subject: "Announcement 3",
-      date: "2024-07-03",
-      message: "This is the third announcement message.",
-    },
-  ]);
+  const [announcements, setAnnouncements] = useState([]);
 
   const fetchAnnouncemnts = async () => {
     const response = await getAllAnnouncements();
     setAnnouncements(response);
   };
 
-  // useEffect(() => {
-  //   fetchAnnouncemnts();
-  // }, []);
+  useEffect(() => {
+    fetchAnnouncemnts();
+  }, []);
 
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
@@ -63,8 +47,8 @@ const DashBoard = () => {
               <AnnouncementCard
                 key={key}
                 subject={announcement.subject}
-                message={announcement.message}
-                date={announcement.date}
+                message={announcement.content}
+                date={announcement.expiresOn}
               />
             ))
           ) : (
