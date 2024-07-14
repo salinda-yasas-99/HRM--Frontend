@@ -14,7 +14,6 @@ const AnnouncementModal = ({
       ...announcement,
       expiresOn: new Date(announcement.expiresOn).toISOString(),
     };
-    console.log("formated announcement", formattedAnnouncement);
     if (isEditMode) {
       updateExistingAnnouncement(formattedAnnouncement);
     } else {

@@ -18,7 +18,6 @@ export const getAllAnnouncements = async () => {
     const response = await authAxios.get(
       "http://localhost:8080/api/v1/announcement"
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log("Error ocurred while getting all announcements", error);
@@ -58,7 +57,6 @@ export const updateAnnouncement = async (data) => {
       `http://localhost:8080/api/v1/announcement/${data?.announcementId}`,
       data
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log("Error ocurred while updating announcement", error);
@@ -77,7 +75,6 @@ export const deleteeAnnouncement = async (announcementId) => {
     const response = await authAxios.delete(
       `http://localhost:8080/api/v1/announcement/${announcementId}`
     );
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log("Error ocurred while deleting announcement", error);
