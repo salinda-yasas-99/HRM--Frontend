@@ -12,7 +12,6 @@ export const getAllAnnouncements = async () => {
     const response = await authAxios.get(
       `http://localhost:8080/api/v1/announcement`
     );
-    console.log(response);
     return response.data;
   } catch (err) {
     console.log("This is error", err);
