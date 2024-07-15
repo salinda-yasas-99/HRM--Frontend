@@ -88,7 +88,7 @@ const Departments = () => {
     try {
       const response = await getAllDepartments();
       if (response !== undefined) {
-        // setDepartments(response);
+        setDepartments(response);
       }
     } catch (error) {
       console.error("Error fetching departments:", error);
