@@ -110,7 +110,8 @@ export const DeleteEmployeeByID = async (employeeId) => {
 
     const response = await authAxios.delete(url);
     console.log(response);
-    return response.data;
+    alert(response.data.message);
+    return response.data.message;
   } catch (err) {
     console.log("This is error", err);
     throw err;
@@ -153,8 +154,8 @@ export const AddNewEmployee = async (employee) => {
     const url = `http://localhost:8080/api/v1/auth/register`;
 
     const response = await authAxios.post(url, NewEmployee);
-    console.log(response);
-    return alert(response.message);
+    console.log("This is add res", response.data);
+    return alert(response.data.message);
   } catch (err) {
     console.log("This is error", err);
     alert("Error occured");
