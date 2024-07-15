@@ -160,6 +160,30 @@ const AddNewemployee = () => {
 
     try {
       await AddNewEmployee(employee);
+      setEmployee({
+        firstName: "",
+        lastName: "",
+        role: "",
+        gender: "",
+        nic: "",
+        mobilePhoneNo: "",
+        homePhoneNo: "",
+        workEmail: "",
+        employmentType: "",
+        department: "",
+        position: "",
+        basicSalary: "",
+        joinedDate: "",
+        epfNo: "",
+        dob: "",
+        maritalStatus: "",
+        address: "",
+        spouseName: "",
+        fatherName: "",
+        motherName: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (error) {
       console.error("Login Error:", error);
     }
@@ -256,44 +280,11 @@ const AddNewemployee = () => {
                     />
                   </div>
                 </div>
-                {/* <div className="flex flex-row px-5 gap-x-[20%]">
-                <div className="w-[140px]">Personal E-mail</div>
-                <div>
-                  <TextBox />
-                </div>
-              </div> */}
-                {/* <div className="flex flex-row px-5 gap-x-[20%]">
-                <div className="w-[140px]">Mobile Number</div>
-                <div>
-                  <TextBox
-                    label="mobileNumber"
-                    value={employee.mobileNumber}
-                    onChange={handleChange}
-                    required={true}
-                  />
-                </div>
-              </div> */}
               </div>
               {/* cell 2 */}
               <div className="grid grid-col-1 gap-y-2">
-                <div className="flex flex-row px-5 gap-x-[20%] mt-11">
-                  {/* <div className="w-[140px]">User Name</div>
+                <div className="flex flex-row px-5 gap-x-[20%] mt-11"></div>
 
-                <div>
-                  <TextBox />
-                </div> */}
-                </div>
-                {/* <div className="flex flex-row px-5 gap-x-[20%]">
-                <div className="w-[140px]">Work Email</div>
-                <div>
-                  <TextBox
-                    label="workMail"
-                    value={employee.workEmail}
-                    onChange={handleChange}
-                    required={true}
-                  />
-                </div>
-              </div> */}
                 <div className="flex flex-row px-5 gap-x-[20%]">
                   <div className="w-[140px]">Role Type</div>
                   <div>
@@ -591,158 +582,6 @@ const AddNewemployee = () => {
               </button>
             </div>
           </form>
-        </div>
-        {/* Qualification */}
-        <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] rounded-xl mt-7 pb-5">
-          <div className="flex flex-row gap-x-16">
-            <div className="flex flex-col w-[46%] mb-4">
-              <div className="text-black text-xl font-semibold px-5 py-4">
-                Qualification
-              </div>
-            </div>
-          </div>
-          <div className="grid col-span-2 md:w-[96.4%] mt-[25px] justify-end mb-5">
-            <div
-              className="bg-[#013a63] p-2 rounded-lg text-white font-medium"
-              onClick={handleQualiClick}
-            >
-              Add Qualification
-            </div>
-          </div>
-          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    Course
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Institute
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Marks
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Complication Year
-                  </th>
-                </tr>
-              </thead>
-              {/* <tbody>
-                {leaves.map((appliedLeaves, key) => {
-                  return (
-                    <tr
-                      id={key}
-                      className="bg-white border-b text-gray-900 font-medium"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {appliedLeaves.Type}
-                      </td>
-                      <td className="px-6 py-4">{appliedLeaves.From}</td>
-                      <td className="px-6 py-4">{appliedLeaves.To}</td>
-                      <td className="px-6 py-4">{appliedLeaves.NoOfDays}</td>
-                      <td className="px-6 py-4">
-                        <div
-                          className={`${
-                            appliedLeaves.Status === "Pending"
-                              ? "bg-[#facc96]"
-                              : appliedLeaves.Status === "Approved"
-                              ? "bg-[#bbf2b2]"
-                              : appliedLeaves.Status === "Rejected"
-                              ? "bg-[#f5a2a2]"
-                              : ""
-                          } flex justify-center py-1 rounded-lg`}
-                        >
-                          {appliedLeaves.Status}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody> */}
-            </table>
-            {quliAdd && (
-              <QualificationForm
-                closeModal={handleQualiCloseClick}
-                onSubmit={handleQualificationSubmit}
-              />
-            )}
-          </div>
-        </div>
-        {/* Experience */}
-        <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] rounded-xl mt-7 pb-5">
-          <div className="flex flex-row gap-x-16">
-            <div className="flex flex-col w-[46%] mb-4">
-              <div className="text-black text-xl font-semibold px-5 py-4">
-                Experience
-              </div>
-            </div>
-          </div>
-          <div className="grid col-span-2 md:w-[96.4%] mt-[25px] justify-end mb-5">
-            <div
-              className="bg-[#013a63] p-2 rounded-lg text-white font-medium"
-              onClick={handleEXPClick}
-            >
-              Add Experience
-            </div>
-          </div>
-          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    Previous Company
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Designation
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    From
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    To
-                  </th>
-                </tr>
-              </thead>
-              {/* <tbody>
-                {leaves.map((appliedLeaves, key) => {
-                  return (
-                    <tr
-                      id={key}
-                      className="bg-white border-b text-gray-900 font-medium"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {appliedLeaves.Type}
-                      </td>
-                      <td className="px-6 py-4">{appliedLeaves.From}</td>
-                      <td className="px-6 py-4">{appliedLeaves.To}</td>
-                      <td className="px-6 py-4">{appliedLeaves.NoOfDays}</td>
-                      <td className="px-6 py-4">
-                        <div
-                          className={`${
-                            appliedLeaves.Status === "Pending"
-                              ? "bg-[#facc96]"
-                              : appliedLeaves.Status === "Approved"
-                              ? "bg-[#bbf2b2]"
-                              : appliedLeaves.Status === "Rejected"
-                              ? "bg-[#f5a2a2]"
-                              : ""
-                          } flex justify-center py-1 rounded-lg`}
-                        >
-                          {appliedLeaves.Status}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody> */}
-            </table>
-            {expAdd && (
-              <ExpereinceForm
-                closeModal={handleeXPCloseClick}
-                onSubmit={handleExperienceSubmit}
-              />
-            )}
-          </div>
         </div>
       </div>
     </div>

@@ -3,6 +3,12 @@ import Welcome from "../components/Welcome";
 import exp from "../assets/exp-icon.png";
 import quali from "../assets/quali-icon.png";
 import { getEmployeeDetails } from "../Services/RestApiCalls";
+import ExpereinceForm from "../components/ExpereinceForm";
+import QualificationForm from "../components/QualificationForm";
+import { getExpereienceByUser } from "../Services/ExperienceService";
+import { DeleteExperience } from "../Services/ExperienceService";
+import { getQualificationByUser } from "../Services/QualificationService";
+import { DeleteQualification } from "../Services/QualificationService";
 
 const Employee = () => {
   const [employee, setemployee] = useState({
@@ -29,6 +35,44 @@ const Employee = () => {
     //   emergencyNum: "077-5804567",
   });
 
+  //for get
+  const [quliAdd, setquliAdd] = useState(false);
+  const [expAdd, setExpAdd] = useState(false);
+
+  //for post
+  const [qualifications, setQualifications] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+
+  const handleQualiClick = () => {
+    setquliAdd(true);
+  };
+
+  const handleQualiCloseClick = () => {
+    setquliAdd(false);
+  };
+
+  const handleEXPClick = () => {
+    setExpAdd(true);
+    fetchExpereience();
+  };
+
+  const handleeXPCloseClick = () => {
+    setExpAdd(false);
+    fetchExpereience();
+  };
+
+  const handleQualificationSubmit = async (qualification) => {
+    setQualifications([...qualifications, qualification]);
+    console.log("this is qualification", qualification);
+    setquliAdd(false);
+  };
+
+  const handleExperienceSubmit = async (experience) => {
+    setExperiences([...experiences, experience]);
+    console.log("this is experience", experience);
+    setExpAdd(false);
+  };
+
   const fetchEmployee = async () => {
     const fetched = await getEmployeeDetails();
     setemployee(fetched);
@@ -38,44 +82,84 @@ const Employee = () => {
     fetchEmployee();
   }, []);
 
-  const [experience, setExperience] = useState([
-    {
-      previuosCompany: "ABC Company Pvt(Ltd)",
-      duration: "2021 - 2022",
-      designation: "UI / UX Engineer",
-    },
-    {
-      previuosCompany: "ABC Company Pvt(Ltd)",
-      duration: "2021 - 2022",
-      designation: "UI / UX Engineer",
-    },
-    {
-      previuosCompany: "ABC Company Pvt(Ltd)",
-      duration: "2021 - 2022",
-      designation: "UI / UX Engineer",
-    },
-  ]);
+  const fetchExpereience = async () => {
+    const fetched = await getExpereienceByUser();
+    setExperiences(fetched);
+  };
 
-  const [qualification, setQualification] = useState([
-    {
-      qualification: "Bcs. Information Technology (Special in SE)",
-      university: "University of Wayamba",
-      duration: "2020 - 2024",
-      score: "2.8",
-    },
-    {
-      qualification: "Bcs. update (Special in SE)",
-      university: "University of moratuewa",
-      duration: "2020 - 2024",
-      score: "2.8",
-    },
-    // {
-    //   qualification: "Bcs. Information Technology (Special in SE)",
-    //   university: "University of Wayamba",
-    //   duration: "2020 - 2024",
-    //   score: "2.8",
-    // },
-  ]);
+  useEffect(() => {
+    fetchExpereience();
+  }, []);
+
+  const fetchQualifications = async () => {
+    const fetched = await getQualificationByUser();
+    setQualifications(fetched);
+  };
+
+  useEffect(() => {
+    fetchQualifications();
+  }, []);
+
+  const handleDeleteClick = async (expId) => {
+    try {
+      await DeleteExperience(expId);
+
+      fetchExpereience();
+    } catch (error) {
+      console.error("Error deleting experience:", error);
+      alert("There was an error deleting the experience.");
+    }
+  };
+
+  const handleDeleteClickQualification = async (quliId) => {
+    try {
+      await DeleteQualification(quliId);
+
+      fetchQualifications();
+    } catch (error) {
+      console.error("Error deleting qulaification:", error);
+      alert("There was an error deleting the qualification.");
+    }
+  };
+
+  // const [experience, setExperience] = useState([
+  //   {
+  //     previuosCompany: "ABC Company Pvt(Ltd)",
+  //     duration: "2021 - 2022",
+  //     designation: "UI / UX Engineer",
+  //   },
+  //   {
+  //     previuosCompany: "ABC Company Pvt(Ltd)",
+  //     duration: "2021 - 2022",
+  //     designation: "UI / UX Engineer",
+  //   },
+  //   {
+  //     previuosCompany: "ABC Company Pvt(Ltd)",
+  //     duration: "2021 - 2022",
+  //     designation: "UI / UX Engineer",
+  //   },
+  // ]);
+
+  // const [qualification, setQualification] = useState([
+  //   {
+  //     qualification: "Bcs. Information Technology (Special in SE)",
+  //     university: "University of Wayamba",
+  //     duration: "2020 - 2024",
+  //     score: "2.8",
+  //   },
+  //   {
+  //     qualification: "Bcs. update (Special in SE)",
+  //     university: "University of moratuewa",
+  //     duration: "2020 - 2024",
+  //     score: "2.8",
+  //   },
+  //   // {
+  //   //   qualification: "Bcs. Information Technology (Special in SE)",
+  //   //   university: "University of Wayamba",
+  //   //   duration: "2020 - 2024",
+  //   //   score: "2.8",
+  //   // },
+  // ]);
 
   //   useEffect(() => {
   //     const fetchBooks = async () => {
@@ -93,7 +177,10 @@ const Employee = () => {
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px] pb-10">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome name="Welcome Lakmini" tab="Employee Info" />
+        <Welcome
+          name={employee.firstName + employee.lastName}
+          tab="Employee Info"
+        />
 
         <div className="emp-details">
           <div className="flex bg-[#6a44d9] pl-10 pt-5 md:w-[96.4%] md:h-[100px] mt-10 rounded-t-xl">
@@ -102,7 +189,7 @@ const Employee = () => {
                 {employee.firstName} {employee.lastName}
               </div>
               <div className="w-[130.12px] text-white text-xs font-medium">
-                {employee.position}
+                {employee.positionName}
               </div>
             </div>
           </div>
@@ -172,12 +259,12 @@ const Employee = () => {
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Department</div>
                     <div>:</div>
-                    <div>{employee.department}</div>
+                    <div>{employee.departmentName}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Position</div>
                     <div>:</div>
-                    <div>{employee.position}</div>
+                    <div>{employee.positionName}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Joined date</div>
@@ -246,7 +333,7 @@ const Employee = () => {
           </div>
         </div>
         {/* experience */}
-        <div className="experience details">
+        {/* <div className="experience details">
           <div className="flex bg-[#6a44d9] pl-10 pt-5 md:w-[96.4%] md:h-[80px] mt-10 rounded-t-xl">
             <div className="flex flex-row gap-10">
               <div>
@@ -282,9 +369,9 @@ const Employee = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
         {/* Qualification */}
-        <div className="experience details">
+        {/* <div className="experience details">
           <div className="flex bg-[#6a44d9] pl-10 pt-5 md:w-[96.4%] md:h-[80px] mt-10 rounded-t-xl">
             <div className="flex flex-row gap-10">
               <div>
@@ -329,6 +416,155 @@ const Employee = () => {
                 })}
               </tbody>
             </table>
+          </div>
+        </div> */}
+        {/* Qualification */}
+        <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] rounded-xl mt-7 pb-5">
+          <div className="flex flex-row gap-x-16">
+            <div className="flex flex-col w-[46%] mb-4">
+              <div className="text-black text-xl font-semibold px-5 py-4">
+                Qualification
+              </div>
+            </div>
+          </div>
+          <div className="grid col-span-2 md:w-[96.4%] mt-[25px] justify-end mb-5">
+            <div
+              className="bg-[#013a63] p-2 rounded-lg text-white font-medium"
+              onClick={handleQualiClick}
+            >
+              Add Qualification
+            </div>
+          </div>
+          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right">
+              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
+                <tr>
+                  <th scope="col" class="px-6 py-5">
+                    Course
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    Qualification Description
+                  </th>
+
+                  <th scope="col" class="px-6 py-5">
+                    Complication Year
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    Institute
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {qualifications.length > 0 &&
+                  qualifications.map((qli, key) => {
+                    return (
+                      <tr
+                        id={key}
+                        className="bg-white border-b text-gray-900 font-medium"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {qli.courseName}
+                        </td>
+                        <td className="px-6 py-4">{qli.qualificationDesc}</td>
+                        <td className="px-6 py-4">{qli.year}</td>
+                        <td className="px-6 py-4">{qli.instituteName}</td>
+
+                        <td>
+                          <div
+                            className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md"
+                            onClick={() => handleDeleteClick(qli.q)}
+                          >
+                            Delete
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+            {quliAdd && (
+              <QualificationForm
+                closeModal={handleQualiCloseClick}
+                onSubmit={handleQualificationSubmit}
+              />
+            )}
+          </div>
+        </div>
+        {/* Experience */}
+        <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] rounded-xl mt-7 pb-5">
+          <div className="flex flex-row gap-x-16">
+            <div className="flex flex-col w-[46%] mb-4">
+              <div className="text-black text-xl font-semibold px-5 py-4">
+                Experience
+              </div>
+            </div>
+          </div>
+          <div className="grid col-span-2 md:w-[96.4%] mt-[25px] justify-end mb-5">
+            <div
+              className="bg-[#013a63] p-2 rounded-lg text-white font-medium"
+              onClick={handleEXPClick}
+            >
+              Add Experience
+            </div>
+          </div>
+          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right">
+              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
+                <tr>
+                  <th scope="col" class="px-6 py-5">
+                    Previous Company
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    Designation
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    From
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    To
+                  </th>
+                  <th scope="col" class="px-6 py-5">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {experiences.length > 0 &&
+                  experiences.map((exp, key) => {
+                    return (
+                      <tr
+                        id={key}
+                        className="bg-white border-b text-gray-900 font-medium"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {exp.companyName}
+                        </td>
+                        <td className="px-6 py-4">{exp.designation}</td>
+                        <td className="px-6 py-4">{exp.startDate}</td>
+                        <td className="px-6 py-4">{exp.endDate}</td>
+
+                        <td>
+                          <div
+                            className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md"
+                            onClick={() => handleDeleteClick(exp.experienceId)}
+                          >
+                            Delete
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+            {expAdd && (
+              <ExpereinceForm
+                closeModal={handleeXPCloseClick}
+                onSubmit={handleExperienceSubmit}
+              />
+            )}
           </div>
         </div>
       </div>

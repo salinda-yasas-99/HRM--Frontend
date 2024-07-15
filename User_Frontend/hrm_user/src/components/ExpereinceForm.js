@@ -1,36 +1,44 @@
 import React, { useState } from "react";
-import { AddPosition } from "../../Services/PositionsAPi";
+import { AddExpereince } from "../Services/ExperienceService";
 
-const PositionForm = ({ closeModal }) => {
-  const [position, setPosition] = useState({
-    positionName: "",
-    positionDesc: "",
+const ExpereinceForm = ({ closeModal, onSubmit }) => {
+  const [experience, setExperience] = useState({
+    companyName: "",
+    designation: "",
+    startDate: "",
+    endDate: "",
+    employeeId: "",
   });
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setPosition({
-      ...position,
-      [id]: value,
+    const { name, value } = e.target;
+    setExperience({
+      ...experience,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const requiredFields = ["positionName", "positionDesc"];
+    const requiredFields = [
+      "companyName",
+      "designation",
+      "startDate",
+      "endDate",
+    ];
 
     for (let field of requiredFields) {
-      if (!position[field]) {
+      if (!experience[field]) {
         alert(`Please fill the ${field} field.`);
         return;
       }
     }
-    console.log("Form Data:", position);
-
+    console.log("Form Data: exp", experience);
     try {
-      await AddPosition(position);
-    } catch (error) {
-      console.error("error:", error);
+      await AddExpereince(experience);
+    } catch (err) {
+      console.error("error", err);
+      alert(err);
     }
     closeModal();
   };
@@ -46,7 +54,7 @@ const PositionForm = ({ closeModal }) => {
           {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
-              Add Position
+              Add Experience
             </h3>
             <button
               type="button"
@@ -74,77 +82,64 @@ const PositionForm = ({ closeModal }) => {
           {/* Modal body */}
           <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
-              {/* <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Department Name
-                </label>
-                <input
-                  type="text"
-                  name="price"
-                  id="price"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Hr department"
-                  required=""
-                />
-              </div>
-              <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Deapartment Head Name
-                </label>
-                <input
-                  type="text"
-                  name="price"
-                  id="price"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Mr. Amalraj"
-                  required=""
-                />
-              </div> */}
-
               <div className="col-span-2 sm:col-span-1">
                 <label className="block mb-2 text-sm font-medium text-gray-900">
-                  Position Name
+                  Previous Company
                 </label>
                 <input
-                  type="text"
-                  id="positionName"
+                  name="companyName"
+                  id="companyName"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Enter Position name"
-                  value={position.positionName}
+                  placeholder="Enter Compnay name"
+                  value={experience.companyName}
                   onChange={handleChange}
                   required
                 />
-                {/* <input
-                  type="text"
-                  id="positionName"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Hr department"
-                  value={position.positionName}
-                  required=""
-                /> */}
               </div>
-
-              <div className="col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Description
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block mb-2 text-sm font-medium text-gray-900">
+                  Designation
                 </label>
-                <textarea
-                  id="positionDesc"
-                  value={position.positionDesc}
-                  rows="4"
+                <input
+                  type="text"
+                  name="designation"
+                  id="designation"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Enter your description"
+                  placeholder="Enter designation"
+                  value={experience.designation}
                   onChange={handleChange}
-                ></textarea>
+                  required
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block mb-2 text-sm font-medium text-gray-900">
+                  From
+                </label>
+                <input
+                  type="text"
+                  name="startDate"
+                  id="startDate"
+                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
+                  placeholder="2024-07-15"
+                  value={experience.startDate}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block mb-2 text-sm font-medium text-gray-900">
+                  To
+                </label>
+                <input
+                  type="text"
+                  name="endDate"
+                  id="endDate"
+                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
+                  placeholder="2024-07-15"
+                  value={experience.endDate}
+                  onChange={handleChange}
+                  required
+                />
               </div>
             </div>
             <div className="col-span-2 flex justify-center">
@@ -162,4 +157,4 @@ const PositionForm = ({ closeModal }) => {
   );
 };
 
-export default PositionForm;
+export default ExpereinceForm;

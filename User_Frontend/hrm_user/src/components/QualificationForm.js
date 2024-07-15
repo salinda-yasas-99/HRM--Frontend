@@ -1,39 +1,50 @@
 import React, { useState } from "react";
-import { AddPosition } from "../../Services/PositionsAPi";
+import { AddQualification } from "../Services/QualificationService";
 
-const PositionForm = ({ closeModal }) => {
-  const [position, setPosition] = useState({
-    positionName: "",
-    positionDesc: "",
+const QualificationForm = ({ closeModal, onSubmit }) => {
+  const [qualification, setQualification] = useState({
+    courseName: "",
+    qualificationDesc: "",
+    year: "",
+    instituteName: "",
+    employeeId: "",
   });
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setPosition({
-      ...position,
-      [id]: value,
+    const { name, value } = e.target;
+    setQualification({
+      ...qualification,
+      [name]: value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const requiredFields = ["positionName", "positionDesc"];
+    const requiredFields = [
+      "courseName",
+      "qualificationDesc",
+      "year",
+      "instituteName",
+    ];
 
     for (let field of requiredFields) {
-      if (!position[field]) {
+      if (!qualification[field]) {
         alert(`Please fill the ${field} field.`);
         return;
       }
     }
-    console.log("Form Data:", position);
+    console.log("Form Data: exp", qualification);
 
     try {
-      await AddPosition(position);
-    } catch (error) {
-      console.error("error:", error);
+      await AddQualification(qualification);
+    } catch (err) {
+      console.error("error", err);
+      alert(err);
     }
     closeModal();
+    //onSubmit(qualification);
   };
+
   return (
     <div
       id="leave-form"
@@ -46,7 +57,7 @@ const PositionForm = ({ closeModal }) => {
           {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
-              Add Position
+              Add Qualification
             </h3>
             <button
               type="button"
@@ -74,77 +85,77 @@ const PositionForm = ({ closeModal }) => {
           {/* Modal body */}
           <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
-              {/* <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
-                  Department Name
-                </label>
-                <input
-                  type="text"
-                  name="price"
-                  id="price"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Hr department"
-                  required=""
-                />
-              </div>
               <div className="col-span-2 sm:col-span-1">
                 <label
-                  htmlFor="price"
+                  htmlFor="cousreName"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Deapartment Head Name
+                  Course Name
                 </label>
                 <input
                   type="text"
-                  name="price"
-                  id="price"
+                  name="courseName"
+                  id="courseName"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Mr. Amalraj"
-                  required=""
-                />
-              </div> */}
-
-              <div className="col-span-2 sm:col-span-1">
-                <label className="block mb-2 text-sm font-medium text-gray-900">
-                  Position Name
-                </label>
-                <input
-                  type="text"
-                  id="positionName"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Enter Position name"
-                  value={position.positionName}
+                  placeholder="Enter course name"
+                  value={qualification.courseName}
                   onChange={handleChange}
                   required
                 />
-                {/* <input
-                  type="text"
-                  id="positionName"
-                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Hr department"
-                  value={position.positionName}
-                  required=""
-                /> */}
               </div>
-
-              <div className="col-span-2">
+              <div className="col-span-2 sm:col-span-1">
                 <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  htmlFor="instituteName"
+                  className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Description
+                  Institute Name
                 </label>
-                <textarea
-                  id="positionDesc"
-                  value={position.positionDesc}
-                  rows="4"
+                <input
+                  type="text"
+                  name="instituteName"
+                  id="instituteName"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="Enter your description"
+                  placeholder="Enter institue name"
+                  value={qualification.instituteName}
                   onChange={handleChange}
-                ></textarea>
+                  required
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label
+                  htmlFor="marks"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Marks
+                </label>
+                <input
+                  type="text"
+                  name="qualificationDesc"
+                  id="qualificationDesc"
+                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
+                  placeholder="enter marks"
+                  value={qualification.qualificationDesc}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label
+                  htmlFor="completionYear"
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                >
+                  Completion Year
+                </label>
+                <input
+                  type="text"
+                  name="year"
+                  id="year"
+                  className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
+                  placeholder="2024"
+                  required
+                  value={qualification.year}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="col-span-2 flex justify-center">
@@ -162,4 +173,4 @@ const PositionForm = ({ closeModal }) => {
   );
 };
 
-export default PositionForm;
+export default QualificationForm;

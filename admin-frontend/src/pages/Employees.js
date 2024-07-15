@@ -2,39 +2,38 @@ import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
 import { getAllEmployees } from "../Services/RestApiCalls";
 import { DeleteEmployeeByID } from "../Services/RestApiCalls";
+import ViewEmployee from "./ViewEmployee";
 
 const Employees = () => {
-  const [employeess, setEmployees] = useState();
-  // {
-  //   userName: "emp-001",
-  //   Name: "Saman Silva",
-  //   Position: "finance manager",
-  //   Department: "Finance Department",
-  //   email: "emp-001@dian.com",
-  // },
-  // {
-  //   userName: "emp-001",
-  //   Name: "Saman Silva",
-  //   Position: "finance manager",
-  //   Department: "Finance Department",
-  //   email: "emp-001@dian.com",
-  // },
-  // {
-  //   userName: "emp-001",
-  //   Name: "Saman Silva",
-  //   Position: "finance manager",
-  //   Department: "Finance Department",
-  //   email: "emp-001@dian.com",
-  // },
+  const [employeess, setEmployees] = useState([]);
+
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  const selectEmployee = (employee) => {
+    setSelectedEmployee(employee);
+    setShowDetails(true);
+  };
+
+  const fetchEmployees = async () => {
+    const fetched = await getAllEmployees();
+    setEmployees(fetched);
+  };
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      const fetchedEmployees = await getAllEmployees();
-      setEmployees(fetchedEmployees);
-    };
-
     fetchEmployees();
   }, []);
+
+  const handleDeleteClick = async (empId) => {
+    try {
+      await DeleteEmployeeByID(empId);
+
+      fetchEmployees();
+    } catch (error) {
+      console.error("Error deleting position:", error);
+      alert("There was an error deleting the employee.");
+    }
+  };
 
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
@@ -45,9 +44,6 @@ const Employees = () => {
             <table class="w-full text-sm text-left rtl:text-right">
               <thead class="text-xs text-white uppercase bg-[#6a44d9]">
                 <tr>
-                  {/* <th scope="col" class="px-6 py-5">
-                    User Name
-                  </th> */}
                   <th scope="col" class="px-6 py-5">
                     Name
                   </th>
@@ -69,7 +65,7 @@ const Employees = () => {
                 </tr>
               </thead>
               <tbody>
-                {employeess !== undefined ? (
+                {employeess.length > 0 ? (
                   employeess.map((emp, key) => {
                     return (
                       <tr
@@ -77,22 +73,24 @@ const Employees = () => {
                         key={emp.id} // Add a key prop for React's list rendering
                         className="bg-white border-b text-gray-900 font-medium"
                       >
-                        {/* <td className="px-6 py-4 whitespace-nowrap">
-                          {emp.userName}
-                        </td> */}
                         <td className="px-6 py-4">{emp.firstName}</td>
-                        <td className="px-6 py-4">{emp.position}</td>
-                        <td className="px-6 py-4">{emp.department}</td>
+                        <td className="px-6 py-4">{emp.positionName}</td>
+                        <td className="px-6 py-4">{emp.departmentName}</td>
                         <td className="px-6 py-4">{emp.workEmail}</td>
                         <td className="px-6 py-4">
-                          <div className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md cursor-pointer">
+                          <div
+                            className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md cursor-pointer"
+                            onClick={() => selectEmployee(emp)}
+                          >
                             View
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div
                             className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md cursor-pointer"
-                            // onClick={DeleteEmployeeByID(emp.employeeId)}
+                            onClick={() => {
+                              handleDeleteClick(emp.employeeId);
+                            }}
                           >
                             Delete
                           </div>
@@ -111,6 +109,12 @@ const Employees = () => {
                   </tr>
                 )}
               </tbody>
+              {showDetails && (
+                <ViewEmployee
+                  employee={selectedEmployee}
+                  onClose={() => setShowDetails(false)}
+                />
+              )}
             </table>
           </div>
         </div>
