@@ -1,12 +1,12 @@
 import React from "react";
 
-const AnnouncementDeleteModal = ({
-  announcement,
+const DepartmentDeleteModal = ({
+  department,
   closeModal,
-  deleteAnnouncement,
+  deleteDepartment,
 }) => {
   const handleDeleteClick = () => {
-    deleteAnnouncement(announcement?.announcementId);
+    deleteDepartment(department?.departmentId);
     closeModal();
   };
 
@@ -57,7 +57,7 @@ const AnnouncementDeleteModal = ({
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500">
-              {`Are you sure you want to delete this "${announcement?.subject}" announcement?`}
+              {`Are you sure you want to delete this "${department?.departmentName}" announcement?`}
             </h3>
             <button
               data-modal-hide="popup-modal"
@@ -82,4 +82,4 @@ const AnnouncementDeleteModal = ({
   );
 };
 
-export default AnnouncementDeleteModal;
+export default DepartmentDeleteModal;

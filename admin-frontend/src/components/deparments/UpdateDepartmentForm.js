@@ -13,7 +13,7 @@ const UpdateDepartmentForm = ({ closeModal, initialDeptData }) => {
   useEffect(() => {
     const fetchEmployees = async () => {
       const fetchedEmployees = await getAllEmployees();
-      // setEmployees(fetchedEmployees);
+      setEmployees(fetchedEmployees);
     };
 
     fetchEmployees();
@@ -58,9 +58,7 @@ const UpdateDepartmentForm = ({ closeModal, initialDeptData }) => {
       className="fixed inset-0 flex items-center justify-center z-50"
     >
       <div className="relative p-4 w-full max-w-md max-h-full">
-        {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow border-2 border-gray-600">
-          {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
               Update Department
@@ -88,7 +86,6 @@ const UpdateDepartmentForm = ({ closeModal, initialDeptData }) => {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {/* Modal body */}
           <form className="p-4 md:p-5">
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2 sm:col-span-1">
@@ -98,7 +95,7 @@ const UpdateDepartmentForm = ({ closeModal, initialDeptData }) => {
                 >
                   Department Name
                 </label>
-                {/* <input
+                <input
                   type="text"
                   name="departmentName"
                   id="departmentName"
@@ -107,7 +104,7 @@ const UpdateDepartmentForm = ({ closeModal, initialDeptData }) => {
                   value={department.departmentName}
                   onChange={handleChange}
                   required
-                /> */}
+                />
               </div>
               <div className="col-span-2 sm:col-span-1">
                 <label

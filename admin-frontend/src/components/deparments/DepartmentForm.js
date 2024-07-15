@@ -7,20 +7,12 @@ import { getAllEmployees } from "../../Services/RestApiCalls";
 
 const DepartmentForm = ({ closeModal }) => {
   const [department, setDepartment] = useState({
+    departmentId: "",
     departmentName: "",
     departmentDesc: "",
     departmentHeadId: "",
   });
   const [employeess, setEmployees] = useState();
-
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      const fetchedEmployees = await getAllEmployees();
-      // setEmployees(fetchedEmployees);
-    };
-
-    fetchEmployees();
-  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -53,6 +45,20 @@ const DepartmentForm = ({ closeModal }) => {
     }
     closeModal();
   };
+
+  const fetchEmployees = async () => {
+    try {
+      const fetchedEmployees = await getAllEmployees();
+      setEmployees(fetchedEmployees);
+    } catch (error) {
+      console.error("Error in fetching employees:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
   return (
     <div
       id="leave-form"
@@ -60,9 +66,7 @@ const DepartmentForm = ({ closeModal }) => {
       className="fixed inset-0 flex items-center justify-center z-50"
     >
       <div className="relative p-4 w-full max-w-2xl max-h-full">
-        {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow border-2 border-gray-600">
-          {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
               Add Department
@@ -90,7 +94,6 @@ const DepartmentForm = ({ closeModal }) => {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {/* Modal body */}
           <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2 sm:col-span-1">
