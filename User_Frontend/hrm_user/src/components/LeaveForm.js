@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const LeaveForm = ({ closeModal }) => {
+const LeaveForm = ({
+  closeModal,
+  applyForLeave,
+  leaveTypes,
+  leaveFormData,
+  setLeaveFormData,
+}) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formattedLeaveData = {
+      ...leaveFormData,
+      startDate: new Date(leaveFormData.startDate).toISOString(),
+      endDate: new Date(leaveFormData.endDate).toISOString(),
+    };
+    applyForLeave(formattedLeaveData);
+  };
+
   return (
     <div
       id="leave-form"
@@ -8,9 +24,7 @@ const LeaveForm = ({ closeModal }) => {
       className="fixed inset-0 flex items-center justify-center z-50"
     >
       <div className="relative p-4 w-full max-w-md max-h-full">
-        {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow border-2 border-gray-600">
-          {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
               Apply Leave
@@ -38,88 +52,100 @@ const LeaveForm = ({ closeModal }) => {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {/* Modal body */}
-          <form className="p-4 md:p-5">
+          <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="category"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Leave Type
                 </label>
                 <select
-                  id="category"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5  border-gray-500 placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500"
+                  value={leaveFormData?.leaveTypeName || ""}
+                  placeholder="Select leave type"
+                  required
+                  onChange={(e) => {
+                    setLeaveFormData((prev) => ({
+                      ...prev,
+                      leaveTypeName: e.target.value,
+                    }));
+                  }}
                 >
-                  <option selected="">Select Leave Type</option>
-                  <option value="TV">Annual Leave</option>
-                  <option value="PC">Casual Leave</option>
-                  <option value="GA">Sick Leave</option>
+                  <option value="">Select Leave Type</option>
+                  {leaveTypes?.map((type) => (
+                    <option key={type.leaveTypeName} value={type.leaveTypeName}>
+                      {type.leaveTypeName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   No of days
                 </label>
                 <input
                   type="number"
-                  name="price"
-                  id="price"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
                   placeholder="1"
-                  required=""
+                  value={leaveFormData?.noOfDays || ""}
+                  required
+                  onChange={(e) => {
+                    setLeaveFormData((prev) => ({
+                      ...prev,
+                      noOfDays: e.target.value,
+                    }));
+                  }}
                 />
               </div>
-
               <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900">
                   From
                 </label>
                 <input
-                  type="text"
-                  name="price"
-                  id="price"
+                  type="date"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="2024-06-01"
-                  required=""
+                  value={leaveFormData?.startDate || ""}
+                  required
+                  onChange={(e) => {
+                    setLeaveFormData((prev) => ({
+                      ...prev,
+                      startDate: e.target.value,
+                    }));
+                  }}
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="price"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900">
                   To
                 </label>
                 <input
-                  type="text"
-                  name="price"
-                  id="price"
+                  type="date"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="2024-06-02"
-                  required=""
+                  value={leaveFormData?.endDate || ""}
+                  required
+                  onChange={(e) => {
+                    setLeaveFormData((prev) => ({
+                      ...prev,
+                      endDate: e.target.value,
+                    }));
+                  }}
                 />
               </div>
-
               <div className="col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Reason
                 </label>
                 <textarea
-                  id="description"
                   rows="4"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
                   placeholder="Write your leave reason"
+                  value={leaveFormData?.reason || ""}
+                  onChange={(e) => {
+                    setLeaveFormData((prev) => ({
+                      ...prev,
+                      reason: e.target.value,
+                    }));
+                  }}
+                  required
                 ></textarea>
               </div>
             </div>
