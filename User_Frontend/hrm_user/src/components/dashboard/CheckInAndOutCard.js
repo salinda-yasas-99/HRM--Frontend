@@ -14,7 +14,10 @@ const CheckInAndOutCard = () => {
   const handleCheckInOut = async () => {
     const status = isCheckedIn ? "checkout" : "checkin";
     const currentDateTime = new Date();
-    const formattedDate = currentDateTime.toISOString().split("T")[0];
+    const year = currentDateTime.getFullYear();
+    const month = String(currentDateTime.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDateTime.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
     const formattedTime = currentDateTime.toTimeString().split(" ")[0];
 
     const updatedAttendance = {
