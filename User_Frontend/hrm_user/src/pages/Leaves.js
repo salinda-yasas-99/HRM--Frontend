@@ -93,12 +93,12 @@ const Leaves = () => {
           ))}
         </div>
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
-          <div
+          <button
             className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
             onClick={handleApplyLeaveClick}
           >
             Apply leave
-          </div>
+          </button>
         </div>
         <div className="leave details mt-8">
           <div className="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">

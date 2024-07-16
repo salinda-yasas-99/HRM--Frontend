@@ -1,30 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Welcome from "../components/Welcome";
+import LeavesTable from "../components/leave/LeavesTable";
+import ApproveModal from "../components/leave/ApproveModal";
+import RejectModal from "../components/leave/RejectModal";
+import {
+  approveOrRejectLeave,
+  getPendingLeaves,
+} from "../Services/LeaveService";
 
 const Leaves = () => {
-  const [leaveForms, setLeaveForms] = useState([
-    {
-      Employee: "Lakimini Theekshana",
-      LeaveType: "Casual Leave",
-      From: "2024-06-19",
-      To: "2024-06-20",
-      Reason: "sick",
-    },
-    {
-      Employee: "Amali Theekshana",
-      LeaveType: "Casual Leave",
-      From: "2024-06-19",
-      To: "2024-06-20",
-      Reason: "sick",
-    },
-    {
-      Employee: "Samadhi Theekshana",
-      LeaveType: "Casual Leave",
-      From: "2024-06-19",
-      To: "2024-06-20",
-      Reason: "sick",
-    },
-  ]);
+  const [pendingLeaves, setPendingLeaves] = useState([]);
+
+  const [approvalModalStatus, setApprovalModalStatus] = useState(false);
+  const [rejectModalStatus, setRejectModalStatus] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const handleApproveClick = () => {
+    setApprovalModalStatus(true);
+  };
+
+  const handleRejectClick = () => {
+    setRejectModalStatus(true);
+  };
+
+  const handleCloseApprovalModal = () => {
+    setApprovalModalStatus(false);
+  };
+
+  const handleCloseRejectModal = () => {
+    setRejectModalStatus(false);
+  };
+
+  const approveLeave = async (id) => {
+    try {
+      const response = await approveOrRejectLeave(id, "Approved");
+      fetchPendingLeaves();
+    } catch (error) {
+      console.error("Error approving leave:", error);
+    }
+  };
+
+  const rejectLeave = async (id) => {
+    try {
+      const response = await approveOrRejectLeave(id, "Rejected");
+      fetchPendingLeaves();
+    } catch (error) {
+      console.error("Error rejecting leave:", error);
+    }
+  };
+
+  const fetchPendingLeaves = async () => {
+    try {
+      const response = await getPendingLeaves();
+      console.log("Pending Leaves:", response);
+      setPendingLeaves(response);
+    } catch (error) {
+      console.error("Error fetching pending leaves:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingLeaves();
+  }, []);
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
@@ -32,60 +70,33 @@ const Leaves = () => {
 
         <div className="leave details mt-8">
           <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    Employee
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Leave Type
-                  </th>
-
-                  <th scope="col" class="px-6 py-5">
-                    From
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    To
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Reason
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaveForms.map((leavf, key) => {
-                  return (
-                    <tr
-                      id={key}
-                      className="bg-white border-b text-gray-900 font-medium"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {leavf.Employee}
-                      </td>
-                      <td className="px-6 py-4">{leavf.LeaveType}</td>
-                      <td className="px-6 py-4">{leavf.From}</td>
-                      <td className="px-6 py-4">{leavf.To}</td>
-                      <td className="px-6 py-4">{leavf.Reason}</td>
-                      <td className="px-6 py-4">
-                      {" "}  
-                        <select
-                          id="category"
-                          className="bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5  border-gray-500 placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500"
-                        >
-                          <option selected="">Pending</option>
-                          <option value="TV">Accpeted</option>
-                          <option value="PC">Rejected</option>
-                        </select>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            {pendingLeaves !== undefined && pendingLeaves.length > 0 && (
+              <LeavesTable
+                pendingLeaves={pendingLeaves}
+                handleApproveClick={handleApproveClick}
+                handleRejectClick={handleRejectClick}
+                setSelectedId={setSelectedId}
+              />
+            )}
+            {pendingLeaves !== undefined && pendingLeaves.length === 0 && (
+              <div className="flex items-center justify-center p-5">
+                <p className="text-gray-500">No pending leaves</p>
+              </div>
+            )}
+            {approvalModalStatus && (
+              <ApproveModal
+                closeModal={handleCloseApprovalModal}
+                selectedId={selectedId}
+                approveLeave={approveLeave}
+              />
+            )}
+            {rejectModalStatus && (
+              <RejectModal
+                closeModal={handleCloseRejectModal}
+                selectedId={selectedId}
+                rejectLeave={rejectLeave}
+              />
+            )}
           </div>
         </div>
       </div>
