@@ -18,14 +18,13 @@ export const getAllDepartments = async () => {
     const response = await authAxios.get(
       "http://localhost:8080/api/v1/department/all"
     );
-    console.log(response);
     return response.data;
-  } catch (err) {
-    console.log("This is error", err);
+  } catch (error) {
+    console.log("This is error", error);
   }
 };
 
-export const DeleteDepartmentByID = async (deptId) => {
+export const deleteDepartmentById = async (departmentId) => {
   const Token = localStorage.getItem("token");
 
   const authAxios = axios.create({
@@ -35,26 +34,17 @@ export const DeleteDepartmentByID = async (deptId) => {
     withCredentials: true,
   });
   try {
-    // Construct the URL dynamically to include the employee ID
-    const url = `http://localhost:8080/api/v1/position/delete/${deptId}`;
-
+    const url = `http://localhost:8080/api/v1/department/delete/${departmentId}`;
     const response = await authAxios.delete(url);
-    console.log(response);
     return response.data;
-  } catch (err) {
-    console.log("This is error", err);
-    throw err;
+  } catch (error) {
+    console.log("This is error", error);
+    throw error;
   }
 };
 
-export const AddDepartment = async (department) => {
+export const addDepartment = async (department) => {
   const Token = localStorage.getItem("token");
-
-  const addDepartment = {
-    departmentName: department.departmentName,
-    departmentDesc: department.departmentDesc,
-    departmentHeadId: department.departmentHeadId,
-  };
 
   const authAxios = axios.create({
     headers: {
@@ -63,26 +53,17 @@ export const AddDepartment = async (department) => {
     withCredentials: true,
   });
   try {
-    // Construct the URL dynamically to include the employee ID
     const url = `http://localhost:8080/api/v1/department`;
-
-    const response = await authAxios.post(url, addDepartment);
-    console.log(response);
+    const response = await authAxios.post(url, department);
     return response.data;
-  } catch (err) {
-    console.log("This is error", err);
-    throw err;
+  } catch (error) {
+    console.log("This is error", error);
+    throw error;
   }
 };
 
-export const UpdateDepartmentByID = async (department, departmentID) => {
+export const updateDepartmentById = async (department) => {
   const Token = localStorage.getItem("token");
-
-  const updtDepartment = {
-    departmentName: department.departmentName,
-    departmentDesc: department.departmentDesc,
-    departmentHeadId: department.departmentHeadId,
-  };
 
   const authAxios = axios.create({
     headers: {
@@ -91,15 +72,12 @@ export const UpdateDepartmentByID = async (department, departmentID) => {
     withCredentials: true,
   });
   try {
-    // Construct the URL dynamically to include the employee ID
-    const url = `http://localhost:8080/api/v1/department/update/${departmentID}`;
-
-    const response = await authAxios.put(url, updtDepartment);
-    console.log(response);
+    const url = `http://localhost:8080/api/v1/department/update/${department.departmentId}`;
+    const response = await authAxios.put(url, department);
     return response.data;
-  } catch (err) {
-    console.log("This is error", err);
-    alert(err);
-    throw err;
+  } catch (error) {
+    console.log("This is error", error);
+    alert(error);
+    throw error;
   }
 };

@@ -1,152 +1,169 @@
 import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
-import DepartmentForm from "../components/deparments/DepartmentForm";
-import UpdateDepartmentForm from "../components/deparments/UpdateDepartmentForm";
-import { getAllDepartments } from "../Services/DepartmentAPI";
-import { DeleteDepartmentByID } from "../Services/DepartmentAPI";
+import {
+  addDepartment,
+  deleteDepartmentById,
+  getAllDepartments,
+  updateDepartmentById,
+} from "../Services/DepartmentAPI";
+import Loading from "../components/common/Loading";
+import DepartmentsTable from "../components/deparments/DepartmentsTable";
+import EmptyImg from "../assets/empty.png";
+import DepartmentModal from "../components/deparments/DepartmentModal";
+import { getAllEmployees } from "../Services/RestApiCalls";
+import DepartmentDeleteModal from "../components/deparments/DepartmentDeleteModal";
 
 const Departments = () => {
-  const [deptAdd, setDeptAdd] = useState(false);
-  const [deptUpdate, setDeptUpdate] = useState(false);
-  const [selectedDepartment, setSelectedDepatment] = useState(null);
+  const [deparments, setDepartments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeparmentModalOpen, setIsDeparmentModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deparmentModalData, setDeparmentModalData] = useState({
+    departmentId: null,
+    departmentName: null,
+    departmentDesc: null,
+    departmentHeadId: null,
+    departmentHeadName: null,
+  });
+  const [employees, setEmployees] = useState([]);
 
-  const handleAddClick = () => {
-    setDeptAdd(true);
+  const setInitialDeparmentModalData = () => {
+    setDeparmentModalData({
+      departmentId: null,
+      departmentName: null,
+      departmentDesc: null,
+      departmentHeadId: null,
+      departmentHeadName: null,
+    });
   };
 
-  const handleAddCloseClick = () => {
-    setDeptAdd(false);
-    fetchDepartments();
+  const handleOpenDeparmentModal = () => {
+    setIsDeparmentModalOpen(true);
   };
 
-  const handleUpdateClick = () => {
-    setDeptUpdate(true);
+  const handleCloseDeparmentModal = () => {
+    setInitialDeparmentModalData();
+    setIsEditMode(false);
+    setIsDeparmentModalOpen(false);
   };
 
-  const handleUpdateCloseClick = (department) => {
-    setDeptUpdate(false);
-    setSelectedDepatment(department);
+  const handleCloseDepartementDeleteModal = () => {
+    setInitialDeparmentModalData();
+    setIsDeleteModalOpen(false);
   };
 
-  const [departments, setDepartments] = useState();
-
-  const fetchDepartments = async () => {
-    const fetched = await getAllDepartments();
-    setDepartments(fetched);
-  };
-  useEffect(() => {
-    fetchDepartments();
-  }, []);
-
-  const handleDeleteClick = async (departmentID) => {
+  const saveNewDepartment = async (data) => {
     try {
-      await DeleteDepartmentByID(departmentID);
-      // Refresh the positions list
+      const response = await addDepartment(data);
+      fetchDepartments();
+      handleCloseDeparmentModal();
+    } catch (error) {
+      console.error("Error saving department:", error);
+    }
+  };
+
+  const updateExistingDepartment = async (data) => {
+    try {
+      const response = await updateDepartmentById(data);
+      fetchDepartments();
+      handleCloseDeparmentModal();
+    } catch (error) {
+      console.error("Error updating department:", error);
+    }
+  };
+
+  const deleteExistingDeparment = async (departmentId) => {
+    try {
+      const response = await deleteDepartmentById(departmentId);
       fetchDepartments();
     } catch (error) {
-      console.error("Error deleting position:", error);
+      console.error("Error deleting department:", error);
       alert("There was an error deleting the position.");
     }
   };
+
+  const fetchDepartments = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getAllDepartments();
+      if (response !== undefined) {
+        setDepartments(response);
+      }
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await getAllEmployees();
+      setEmployees(response);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDepartments();
+    fetchEmployees();
+  }, []);
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
         <Welcome name="Welcome Lakmini" tab="Departments" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
-          <div
-            className="bg-[#1d1f21] p-3 rounded-lg text-white font-medium"
-            onClick={handleAddClick}
+          <button
+            className="focus:outline-none text-white bg-[#013a63] hover:bg-[#0f283a] focus:ring-4 focus:ring-[#013a63] rounded-lg  px-5 py-3 mb-2"
+            onClick={handleOpenDeparmentModal}
           >
-            Add New Department
-          </div>
+            Add Department
+          </button>
         </div>
-        <div className="leave details mt-8">
-          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    Department Name
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Description
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Department Head
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Department Head Mail
-                  </th>
 
-                  <th scope="col" class="px-6 py-5">
-                    action
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {departments !== undefined ? (
-                  departments.map((dept, key) => {
-                    return (
-                      <tr
-                        id={dept.departmentId}
-                        className="bg-white border-b text-gray-900 font-medium"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {dept.departmentName}
-                        </td>
-
-                        <td className="px-6 py-4">{dept.departmentDesc}</td>
-                        <td className="px-6 py-4">
-                          {dept.departmentHead
-                            ? `${dept.departmentHead.firstName} ${dept.departmentHead.lastName}`
-                            : "N/A"}
-                        </td>
-                        <td className="px-6 py-4">
-                          {dept.departmentHead
-                            ? dept.departmentHead.workEmail
-                            : "N/A"}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div
-                            className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md"
-                            onClick={() => handleUpdateClick(dept)}
-                          >
-                            Update
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div
-                            className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md"
-                            onClick={() => handleDeleteClick(dept.departmentId)}
-                          >
-                            Delete
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <td
-                    colSpan="6"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    Currently no announcements
-                  </td>
-                )}
-              </tbody>
-            </table>
-            {deptAdd && <DepartmentForm closeModal={handleAddCloseClick} />}
-            {deptUpdate && (
-              <UpdateDepartmentForm
-                closeModal={handleUpdateCloseClick}
-                initialDeptData={selectedDepartment}
+        {isLoading && <Loading />}
+        {!isLoading && deparments?.length === 0 && (
+          <div className="flex flex-col items-center gap-1 md:w-[96.4%] my-[25px]">
+            <img src={EmptyImg} alt="empty-img" />
+            <div className="text-gray-500 text-center mt-5">
+              No deparments available
+            </div>
+          </div>
+        )}
+        {!isLoading && deparments?.length > 0 && (
+          <div className="leave details my-8">
+            <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
+              <DepartmentsTable
+                departments={deparments}
+                setIsEditMode={setIsEditMode}
+                setDeparmentModalData={setDeparmentModalData}
+                handleOpenDeparmentModal={handleOpenDeparmentModal}
+                setIsDeleteModalOpen={setIsDeleteModalOpen}
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
+        {isDeparmentModalOpen && (
+          <DepartmentModal
+            department={deparmentModalData}
+            setDepartment={setDeparmentModalData}
+            isEditMode={isEditMode}
+            closeModal={handleCloseDeparmentModal}
+            saveNewDepartment={saveNewDepartment}
+            updateExistingDepartment={updateExistingDepartment}
+            employees={employees}
+          />
+        )}
+        {isDeleteModalOpen && (
+          <DepartmentDeleteModal
+            department={deparmentModalData}
+            closeModal={handleCloseDepartementDeleteModal}
+            deleteDepartment={deleteExistingDeparment}
+          />
+        )}
       </div>
     </div>
   );
