@@ -4,15 +4,17 @@ import { getAllEmployees } from "../Services/RestApiCalls";
 import { DeleteEmployeeByID } from "../Services/RestApiCalls";
 import ViewEmployee from "./ViewEmployee";
 
+import { useNavigate } from "react-router-dom";
 const Employees = () => {
   const [employeess, setEmployees] = useState([]);
 
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  // const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const selectEmployee = (employee) => {
-    setSelectedEmployee(employee);
-    setShowDetails(true);
+  const navigate = useNavigate();
+
+  const selectEmployee = (emp) => {
+    navigate("/admin/view", { state: { employee: emp } });
   };
 
   const fetchEmployees = async () => {
@@ -109,12 +111,12 @@ const Employees = () => {
                   </tr>
                 )}
               </tbody>
-              {showDetails && (
+              {/* {showDetails && (
                 <ViewEmployee
                   employee={selectedEmployee}
                   onClose={() => setShowDetails(false)}
                 />
-              )}
+              )} */}
             </table>
           </div>
         </div>

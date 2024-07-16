@@ -11,29 +11,7 @@ import { getQualificationByUser } from "../Services/QualificationService";
 import { DeleteQualification } from "../Services/QualificationService";
 
 const Employee = () => {
-  const [employee, setemployee] = useState({
-    //   firstName: "Lakmini",
-    //   lastName: "Theekshana",
-    //   fullName: "Lakmini theekshan",
-    //   gender: "female",
-    //   personalMail: "lakmini@gmail.com",
-    //   mobileNumber: "077-8707845",
-    //   userName: "Lakmini",
-    //   workMail: "lakmini@diana.lk",
-    //   contractType: "Permenant",
-    //   department: "Human resources",
-    //   position: "Manager",
-    //   salary: 100000,
-    //   joinedDate: "2024-03-05",
-    //   epfNo: "1325-344-565",
-    //   dob: "1999-03-8",
-    //   maritalStatus: "single",
-    //   address: "143/1, Samapath Uyana, Kirbathgoda",
-    //   spouseName: "",
-    //   fatherName: "Amal Karunarathne",
-    //   motherName: "jayani karunathne",
-    //   emergencyNum: "077-5804567",
-  });
+  const [employee, setemployee] = useState({});
 
   //for get
   const [quliAdd, setquliAdd] = useState(false);
@@ -49,6 +27,7 @@ const Employee = () => {
 
   const handleQualiCloseClick = () => {
     setquliAdd(false);
+    fetchQualifications();
   };
 
   const handleEXPClick = () => {
@@ -299,7 +278,7 @@ const Employee = () => {
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Marital status</div>
                     <div>:</div>
-                    <div>{employee.marialStatus}</div>
+                    <div>{employee.maritalStatus}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Address</div>
@@ -475,7 +454,11 @@ const Employee = () => {
                         <td>
                           <div
                             className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md"
-                            onClick={() => handleDeleteClick(qli.q)}
+                            onClick={() =>
+                              handleDeleteClickQualification(
+                                qli.qualificationId
+                              )
+                            }
                           >
                             Delete
                           </div>

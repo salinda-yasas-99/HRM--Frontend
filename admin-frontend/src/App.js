@@ -12,6 +12,7 @@ import Announcements from "./pages/Announcements.js";
 import PayRole from "./pages/PayRole.js";
 import Leaves from "./pages/Leaves.js";
 import AddLeaveType from "./pages/AddLeaveType.js";
+import ViewEmployee from "./pages/ViewEmployee.js";
 
 function App() {
   return (
@@ -106,6 +107,15 @@ function App() {
             <>
               <Sidebar />
               <AddLeaveType />
+            </>
+          }
+        />
+        <Route
+          path="/admin/view"
+          element={
+            <>
+              <Sidebar />
+              <ViewEmployee />
             </>
           }
         />

@@ -6,8 +6,9 @@ const API = axios.create({
 
 export default API;
 
-export const getAllExperiences = async () => {
+export const getExpereienceByUser = async (empId) => {
   const Token = localStorage.getItem("token");
+
   const authAxios = axios.create({
     headers: {
       Authorization: `Bearer ${Token}`,
@@ -15,10 +16,11 @@ export const getAllExperiences = async () => {
     withCredentials: true,
   });
   try {
-    const response = await authAxios.get("");
-    console.log(response);
+    const response = await authAxios.get(
+      `http://localhost:8080/api/v1/work-experiences/user/${empId}`
+    );
     return response.data;
-  } catch (err) {
-    console.log("This is error", err);
+  } catch (error) {
+    console.log("Error ocurred while getting expereience", error);
   }
 };
