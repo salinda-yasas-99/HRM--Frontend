@@ -1,19 +1,23 @@
 import React from "react";
 import LeavesImg from "../../assets/dashboard/leaves.png";
+import { useNavigate } from "react-router-dom";
 
 const MyLeavesCard = () => {
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    navigate("/leaves");
+  };
   return (
-    <a href="#" className="w-full">
-      <div className="flex flex-col items-start justify-around w-full h-full p-5 ">
-        <div className=" rounded-full bg-opacity-75">
-          <img className="w-10 h-10" src={LeavesImg} alt="leaves-img" />
-        </div>
-        <h4 className="text-xl font-semibold text-gray-700">My Leaves</h4>
-        <button className="text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-3 py-1.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
-          Next
-        </button>
+    <div
+      className="flex flex-col items-start justify-around w-full h-full p-5 cursor-pointer"
+      onClick={handleRedirect}
+    >
+      <div className=" rounded-full bg-opacity-75">
+        <img className="w-10 h-10" src={LeavesImg} alt="leaves-img" />
       </div>
-    </a>
+      <h4 className="text-xl font-semibold text-gray-700">My Leaves</h4>
+    </div>
   );
 };
 
