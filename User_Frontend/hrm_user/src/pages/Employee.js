@@ -101,65 +101,10 @@ const Employee = () => {
     }
   };
 
-  // const [experience, setExperience] = useState([
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  // ]);
-
-  // const [qualification, setQualification] = useState([
-  //   {
-  //     qualification: "Bcs. Information Technology (Special in SE)",
-  //     university: "University of Wayamba",
-  //     duration: "2020 - 2024",
-  //     score: "2.8",
-  //   },
-  //   {
-  //     qualification: "Bcs. update (Special in SE)",
-  //     university: "University of moratuewa",
-  //     duration: "2020 - 2024",
-  //     score: "2.8",
-  //   },
-  //   // {
-  //   //   qualification: "Bcs. Information Technology (Special in SE)",
-  //   //   university: "University of Wayamba",
-  //   //   duration: "2020 - 2024",
-  //   //   score: "2.8",
-  //   // },
-  // ]);
-
-  //   useEffect(() => {
-  //     const fetchBooks = async () => {
-  //         const books = await getBooks();
-  //         setBooksArray(books);
-  //     };
-
-  //     fetchBooks();
-  // }, []);
-
-  // useEffect(() => {
-  //     console.log("This is books array passed ", BooksArray);
-  // }, [BooksArray]);
-
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px] pb-10">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome
-          name={employee.firstName + employee.lastName}
-          tab="Employee Info"
-        />
+        <Welcome tab="Employee Info" />
 
         <div className="emp-details">
           <div className="flex bg-[#6a44d9] pl-10 pt-5 md:w-[96.4%] md:h-[100px] mt-10 rounded-t-xl">

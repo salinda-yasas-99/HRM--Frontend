@@ -1,37 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
+import { GetAttendencesByEmpId } from "../Services/AttendenceService";
 
 const Attendence = () => {
   const [attdences, setAttdences] = useState([
-    {
-      date: "01/03/2024",
-      checkIn: "08:00:00 AM",
-      checkOut: "17:00:00 PM",
-      Duration: "08:00:00",
-      status: "present",
-    },
-    {
-      date: "02/03/2024",
-      checkIn: "08:00:00 AM",
-      checkOut: "17:00:00 PM",
-      Duration: "08:00:00",
-      status: "leave",
-    },
-    {
-      date: "03/03/2024",
-      checkIn: "08:00:00 AM",
-      checkOut: "17:00:00 PM",
-      Duration: "08:00:00",
-      status: "present",
-    },
-    {
-      date: "04/03/2024",
-      checkIn: "08:00:00 AM",
-      checkOut: "17:00:00 PM",
-      Duration: "08:00:00",
-      status: "leave",
-    },
+    //   {
+    //     date: "01/03/2024",
+    //     checkIn: "08:00:00 AM",
+    //     checkOut: "17:00:00 PM",
+    //     Duration: "08:00:00",
+    //     status: "present",
+    //   },
+    //   {
+    //     date: "02/03/2024",
+    //     checkIn: "08:00:00 AM",
+    //     checkOut: "17:00:00 PM",
+    //     Duration: "08:00:00",
+    //     status: "leave",
+    //   },
+    //   {
+    //     date: "03/03/2024",
+    //     checkIn: "08:00:00 AM",
+    //     checkOut: "17:00:00 PM",
+    //     Duration: "08:00:00",
+    //     status: "present",
+    //   },
+    //   {
+    //     date: "04/03/2024",
+    //     checkIn: "08:00:00 AM",
+    //     checkOut: "17:00:00 PM",
+    //     Duration: "08:00:00",
+    //     status: "leave",
+    //   },
   ]);
+
+  const fetchAttendence = async () => {
+    const fetched = await GetAttendencesByEmpId();
+    setAttdences(fetched);
+  };
+
+  useEffect(() => {
+    fetchAttendence();
+  }, []);
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
@@ -66,23 +77,13 @@ const Attendence = () => {
                       className="bg-white border-b text-gray-900 font-medium"
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {attItem.date}
+                        {attItem.attendDate}
                       </td>
-                      <td className="px-6 py-4">{attItem.checkIn}</td>
-                      <td className="px-6 py-4">{attItem.checkOut}</td>
-                      <td className="px-6 py-4">{attItem.Duration}</td>
+                      <td className="px-6 py-4">{attItem.inTime}</td>
+                      <td className="px-6 py-4">{attItem.outTime}</td>
+                      <td className="px-6 py-4">{attItem.duration}</td>
                       <td className="px-6 py-4">
-                        <div
-                          className={`${
-                            attItem.status === "present"
-                              ? "bg-[#bbf2b2]"
-                              : attItem.status === "leave"
-                              ? "bg-[#f5a2a2]"
-                              : ""
-                          } flex justify-center py-1 rounded-lg`}
-                        >
-                          {attItem.status}
-                        </div>
+                        <div>{attItem.status}</div>
                       </td>
                     </tr>
                   );
