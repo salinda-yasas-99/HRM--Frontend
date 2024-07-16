@@ -26,8 +26,6 @@ export const logUser = async (user) => {
     localStorage.setItem("workEmail", decodedToken.sub);
     localStorage.setItem("uid", response.data.userId);
     console.log("this is decoded token", decodedToken);
-
-    // window.location.href = "http://localhost:3000/admin/dashboard";
   } catch (error) {
     if (error.response.status === 403) {
       // email or password wrong

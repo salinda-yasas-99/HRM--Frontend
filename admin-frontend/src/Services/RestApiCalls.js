@@ -26,8 +26,6 @@ export const logUser = async (user) => {
     localStorage.setItem("workEmail", decodedToken.sub);
     localStorage.setItem("uid", response.data.userId);
     console.log("this is decoded token", decodedToken);
-
-    //window.location.href = "http://localhost:3000/admin/dashboard";
   } catch (error) {
     if (error.response.status === 403) {
       // email or password wrong
@@ -160,5 +158,25 @@ export const AddNewEmployee = async (employee) => {
     console.log("This is error", err);
     alert("Error occured");
     throw err;
+  }
+};
+
+export const getEmployeeDetailsAdmin = async () => {
+  const Token = localStorage.getItem("token");
+  const uid = localStorage.getItem("uid");
+  const authAxios = axios.create({
+    headers: {
+      Authorization: `Bearer ${Token}`,
+    },
+    withCredentials: true,
+  });
+  try {
+    const response = await authAxios.get(
+      `http://localhost:8080/api/v1/users/${uid}`
+    );
+    console.log("This is response", response);
+    return response.data;
+  } catch (err) {
+    console.log("This is error", err);
   }
 };

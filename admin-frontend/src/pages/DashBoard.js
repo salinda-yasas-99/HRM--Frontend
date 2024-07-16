@@ -40,7 +40,7 @@ const DashBoard = () => {
 
   // const fetchLeaves = async () => {
   //   const fetched = await get();
-  //   setDeptCount(fetched.length);
+  //   setLeavesCount(fetched.length);
   // };
 
   useEffect(() => {
@@ -52,10 +52,6 @@ const DashBoard = () => {
   return (
     <div className="flex flex-col bg-[#cfe0fa] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
-        {/* <div className="flex flex-row">
-        <Search />
-      </div> */}
-
         <div className="flex flex-row mt-[25px] md:w-[96.4%] gap-5">
           <div className="bg-white flex rounded-xl w-1/5 h-[10rem]">
             <EmployeeCountCard empCount={empCount} />
