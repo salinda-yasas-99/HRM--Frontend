@@ -52,7 +52,6 @@ const Leaves = () => {
   const fetchPendingLeaves = async () => {
     try {
       const response = await getPendingLeaves();
-      console.log("Pending Leaves:", response);
       setPendingLeaves(response);
     } catch (error) {
       console.error("Error fetching pending leaves:", error);

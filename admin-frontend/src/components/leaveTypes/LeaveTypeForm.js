@@ -1,14 +1,21 @@
 import React from "react";
 
-const LeaveTypeForm = ({ closeModal }) => {
-  const validateNumber = (event) => {
-    const inputElement = event.target;
-    // Check if the input value is a positive number
-    if (isNaN(inputElement.value) || inputElement.value <= 0) {
-      // Optionally, clear the input or show an error message
-      inputElement.value = ""; // Clears the input
-      alert("Please enter a positive number."); // Shows an alert
+const LeaveTypeForm = ({
+  closeModal,
+  leaveType,
+  setLeaveType,
+  isEditMode,
+  saveNewLeaveType,
+  updateExistingLeaveType,
+}) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isEditMode) {
+      updateExistingLeaveType(leaveType);
+    } else {
+      saveNewLeaveType(leaveType);
     }
+    closeModal();
   };
 
   return (
@@ -18,12 +25,10 @@ const LeaveTypeForm = ({ closeModal }) => {
       className="fixed inset-0 flex items-center justify-center z-50"
     >
       <div className="relative p-4 w-full max-w-md max-h-full">
-        {/* Modal content */}
         <div className="relative bg-white rounded-lg shadow border-2 border-gray-600">
-          {/* Modal header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 ">
-              Add Leave Type
+              {isEditMode ? "Update Leave Type" : "Add Leave Type"}
             </h3>
             <button
               type="button"
@@ -48,23 +53,24 @@ const LeaveTypeForm = ({ closeModal }) => {
               <span className="sr-only">Close modal</span>
             </button>
           </div>
-          {/* Modal body */}
-          <form className="p-4 md:p-5">
+          <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2 sm:col-span-1">
-                <label
-                  htmlFor="leave-type-name"
-                  className="block mb-2 text-sm font-medium text-gray-900"
-                >
+                <label className="block mb-2 text-sm font-medium text-gray-900">
                   Leave type name
                 </label>
                 <input
                   type="text"
-                  name="leaveTypeName"
-                  id="leave-type-name"
+                  value={leaveType?.leaveTypeName || ""}
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
                   placeholder="Enter leave type"
                   required
+                  onChange={(e) => {
+                    setLeaveType({
+                      ...leaveType,
+                      leaveTypeName: e.target.value,
+                    });
+                  }}
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
@@ -73,12 +79,16 @@ const LeaveTypeForm = ({ closeModal }) => {
                 </label>
                 <input
                   type="number"
-                  name="numberOfLeaves"
-                  id="number-of-leaves"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
                   placeholder="Enter number"
+                  value={leaveType?.noOfLeaves || ""}
                   required
-                  onBlur={validateNumber}
+                  onChange={(e) => {
+                    setLeaveType({
+                      ...leaveType,
+                      noOfLeaves: e.target.value,
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -87,7 +97,7 @@ const LeaveTypeForm = ({ closeModal }) => {
                 type="submit"
                 className="text-white w-[150px] justify-center inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
-                Apply
+                {isEditMode ? "Update" : "Save"}
               </button>
             </div>
           </form>
