@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
 import { getAllPaySheets } from "../Services/PaySlipApi";
+import PaySlipViewModal from "../components/PaySheet/PaySlipViewModal";
 
 const PayRole = () => {
   const [payRole, setPayRole] = useState([]);
+  const [paySlipViewModalData, setPaySlipViewModalData] = useState({});
+  const [isPaySlipViewModalOpen, setIsPaySlipViewModalOpen] = useState(false);
 
   const fetchPaySheets = async () => {
     const fetched = await getAllPaySheets();
     setPayRole(fetched);
+  };
+
+  const handleOpenPaySlipViewModal = () => {
+    setIsPaySlipViewModalOpen(true);
+  };
+
+  const handleClosePaySlipViewModal = () => {
+    setIsPaySlipViewModalOpen(false);
+    setPaySlipViewModalData({});
   };
 
   useEffect(() => {
@@ -72,7 +84,13 @@ const PayRole = () => {
                         </td>
                         <td className="px-6 py-4">{payItem.basicAmount}</td>
                         <td className="px-6 py-4">
-                          <div className="bg-[#497cc9] flex justify-center py-[5px] rounded-md">
+                          <div
+                            className="bg-[#497cc9] flex justify-center py-[5px] rounded-md"
+                            onClick={() => {
+                              setPaySlipViewModalData(payItem);
+                              handleOpenPaySlipViewModal();
+                            }}
+                          >
                             View
                           </div>
                         </td>
@@ -88,6 +106,12 @@ const PayRole = () => {
                 )}
               </tbody>
             </table>
+            {isPaySlipViewModalOpen && (
+              <PaySlipViewModal
+                paySlipViewModalData={paySlipViewModalData}
+                handleClosePaySlipViewModal={handleClosePaySlipViewModal}
+              />
+            )}
           </div>
         </div>
       </div>
