@@ -22,12 +22,13 @@ export const logUser = async (user) => {
       "this is login local storage token",
       localStorage.getItem("token")
     );
-    const decodedToken = jwt_decode(JSON.stringify(token));
+    const decodedToken = jwt_decode(token); // No need to stringify
     localStorage.setItem("workEmail", decodedToken.sub);
     localStorage.setItem("uid", response.data.userId);
     console.log("this is decoded token", decodedToken);
+    return true; // Indicate success
   } catch (error) {
-    if (error.response.status === 403) {
+    if (error.response && error.response.status === 401) {
       // email or password wrong
       alert(error.response.data.message);
     } else if (error.response) {
@@ -43,9 +44,9 @@ export const logUser = async (user) => {
     } else {
       console.error("Error setting up the request:", error.message);
     }
+    return false; // Indicate failure
   }
 };
-
 export const getEmployeeDetails = async () => {
   const Token = localStorage.getItem("token");
   const uid = localStorage.getItem("uid");
