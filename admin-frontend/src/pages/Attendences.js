@@ -2,127 +2,100 @@ import React, { useEffect, useState } from "react";
 import Welcome from "../components/Welcome";
 import { getAllEmployees } from "../Services/RestApiCalls";
 import { GetAttendencesByEmpId } from "../Services/AttedenceApi";
+import Loading from "../components/common/Loading";
+import AttendanceTable from "../components/attendance/AttendanceTable";
+import CommonSearchableSelect from "../components/common/CommonSearchableSelect";
 
 const Attendences = () => {
-  const [employeess, setEmployees] = useState();
-  const [empId, setEmpId] = useState(null);
-  const [attdences, setAttdences] = useState();
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [employeeAttendance, setEmployeeAttendance] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [employeeOptions, setEmployeeOptions] = useState([]);
 
-  const fetchAttendences = async () => {
-    const fetched = await GetAttendencesByEmpId(empId);
-    setAttdences(fetched);
+  const generateEmployeeOptions = () => {
+    const options = employees.map((employee) => ({
+      value: employee.employeeId,
+      label: `${employee.firstName} ${employee.lastName}`,
+    }));
+    setEmployeeOptions(options);
+  };
+
+  const fetchAttendancesByEmployee = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await GetAttendencesByEmpId(id);
+      setEmployeeAttendance(response);
+    } catch (error) {
+      console.error("Error fetching attendence", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await getAllEmployees();
+      setEmployees(response);
+    } catch (error) {
+      console.error("Error fetching employees", error);
+    }
   };
 
   useEffect(() => {
-    if (empId != null) {
-      fetchAttendences();
-    }
-  }, []);
+    generateEmployeeOptions();
+  }, [employees]);
 
-  const fetchEmployees = async () => {
-    const fetched = await getAllEmployees();
-    setEmployees(fetched);
-  };
+  useEffect(() => {
+    if (selectedEmployee) {
+      fetchAttendancesByEmployee(selectedEmployee);
+    }
+  }, [selectedEmployee]);
 
   useEffect(() => {
     fetchEmployees();
   }, []);
-
-  //   [
-  //     {
-  //         "attendanceId": 1,
-  //         "employeeId": 6,
-  //         "attendDate": "2024-07-16",
-  //         "inTime": "23:01:11",
-  //         "outTime": "23:01:23",
-  //         "status": "checkedOut",
-  //         "duration": "00:00:12"
-  //     }
-  // ]
 
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
         <Welcome name="Welcome Lakmini" tab="Attendance" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end gap-x-10">
-          <div>
-            {/* <SearchableSelect
+          <div className="w-[350px]">
+            <CommonSearchableSelect
               onChange={(selected) => {
-                setDepartment((prev) => ({
-                  ...prev,
-                  departmentHeadName: selected?.label || "",
-                  departmentHeadId: selected?.value || "",
-                }));
+                setSelectedEmployee(selected?.value || null);
               }}
               options={employeeOptions}
-              defaultValue={department?.departmentHeadName}
-            /> */}
+              placeholder="Select Employee"
+            />
           </div>
         </div>
         <div className="attendence-details mt-8">
           <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    Date
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Check In
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Check Out
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Duration
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {attdences !== undefined ? (
-                  attdences.map((attItem, key) => {
-                    return (
-                      <tr
-                        id={key}
-                        className="bg-white border-b text-gray-900 font-medium"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {attItem.date}
-                        </td>
-                        <td className="px-6 py-4">{attItem.checkIn}</td>
-                        <td className="px-6 py-4">{attItem.checkOut}</td>
-                        <td className="px-6 py-4">{attItem.Duration}</td>
-                        <td className="px-6 py-4">
-                          <div
-                            className={`${
-                              attItem.status === "present"
-                                ? "bg-[#bbf2b2]"
-                                : attItem.status === "leave"
-                                ? "bg-[#f5a2a2]"
-                                : ""
-                            } flex justify-center py-1 rounded-lg`}
-                          >
-                            {attItem.status}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-4 text-center text-gray-500 font-bold"
-                    >
-                      Currently no attdences
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            {isLoading && <Loading />}
+            {!isLoading &&
+              selectedEmployee === null &&
+              employees?.length > 0 && (
+                <div className="flex items-center justify-center p-5">
+                  <p className="text-gray-500">Please Select an employee</p>
+                </div>
+              )}
+            {!isLoading &&
+              selectedEmployee !== null &&
+              employeeAttendance !== undefined &&
+              employeeAttendance?.length > 0 && (
+                <AttendanceTable employeeAttendance={employeeAttendance} />
+              )}
+            {!isLoading &&
+              selectedEmployee !== null &&
+              employeeAttendance?.length === 0 && (
+                <div className="flex items-center justify-center p-5">
+                  <p className="text-gray-500">
+                    No attendances for selected employee
+                  </p>
+                </div>
+              )}
           </div>
         </div>
       </div>
