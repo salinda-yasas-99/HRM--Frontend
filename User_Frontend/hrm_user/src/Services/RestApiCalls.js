@@ -58,7 +58,7 @@ export const getEmployeeDetails = async () => {
   });
   try {
     const response = await authAxios.get(
-      `http://localhost:8080/api/v1/users/${uid}`
+      `http://localhost:8080/api/v1/users/${uid}/EMPLOYEE`
     );
     console.log(response);
     return response.data;
