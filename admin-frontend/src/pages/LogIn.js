@@ -27,8 +27,13 @@ const LogIn = () => {
     setEmailError(""); // Clear error message
 
     try {
-      await logUser(user);
-      navigate("admin/dashboard");
+      const loginSuccess = await logUser(user);
+
+      if (loginSuccess) {
+        navigate("admin/dashboard");
+      } else {
+        console.error("Login Failed");
+      }
     } catch (error) {
       console.error("Login Error:", error);
     }
