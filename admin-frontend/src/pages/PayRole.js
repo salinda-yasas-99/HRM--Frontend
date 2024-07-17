@@ -1,170 +1,202 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Welcome from "../components/Welcome";
-import PayRoleForm from "../components/PayRole/PayRoleForm";
+import PaySlipTable from "../components/paySlip/PaySlipTable";
+import { getAllEmployees } from "../Services/RestApiCalls";
+import {
+  createPreviousPayslips,
+  getAllBonusesTypes,
+  getAllPayslipsForEmployee,
+  postNewBonusType,
+} from "../Services/PaySlipService";
+import Loading from "../components/common/Loading";
+import CommonSearchableSelect from "../components/common/CommonSearchableSelect";
+import PaySlipViewModal from "../components/paySlip/PaySlipViewModal";
+import AddBonusModal from "../components/paySlip/AddBonusModal";
 
 const PayRole = () => {
-  const [payAdd, setpayAdd] = useState(false);
+  const [allPaySlips, setAllPaySplips] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [employeeOptions, setEmployeeOptions] = useState([]);
+  const [isPaySlipViewModalOpen, setIsPaySlipViewModalOpen] = useState(false);
+  const [paySlipViewModalData, setPaySlipViewModalData] = useState({});
+  const [isOpenBonusModal, setIsOpenBonusModal] = useState(false);
+  const [bonusModalData, setBonusModalData] = useState({
+    bonusTypeName: null,
+    bonusAmount: null,
+  });
+  const [allBonusTypes, setAllBonusTypes] = useState([]);
 
-  const handleAddClick = () => {
-    setpayAdd(true);
+  const generateEmployeeOptions = () => {
+    const options = employees.map((employee) => ({
+      value: employee.employeeId,
+      label: `${employee.firstName} ${employee.lastName}`,
+    }));
+    setEmployeeOptions(options);
   };
 
-  const handleAddCloseClick = () => {
-    setpayAdd(false);
+  const initializeBonusModalData = () => {
+    setBonusModalData({
+      bonusTypeName: null,
+      bonusAmount: null,
+    });
   };
 
-  const [payRole, setPayRole] = useState([
-    {
-      userName: "emp-001",
-      name: "lakmini theekshana",
-      position: "Hr Manager",
-      depatment: "HR",
-      email: "lakmini@diana.com",
-    },
-    {
-      userName: "emp-001",
-      name: "lakmini theekshana",
-      position: "Hr Manager",
-      depatment: "HR",
-      email: "lakmini@diana.com",
-    },
-    {
-      userName: "emp-001",
-      name: "lakmini theekshana",
-      position: "Hr Manager",
-      depatment: "HR",
-      email: "lakmini@diana.com",
-    },
-    {
-      userName: "emp-001",
-      name: "lakmini theekshana",
-      position: "Hr Manager",
-      depatment: "HR",
-      email: "lakmini@diana.com",
-    },
-  ]);
+  const handleOpenPaySlipViewModal = () => {
+    setIsPaySlipViewModalOpen(true);
+  };
+
+  const handleClosePaySlipViewModal = () => {
+    setIsPaySlipViewModalOpen(false);
+    setPaySlipViewModalData({});
+  };
+
+  const handleOpenBonusModal = () => {
+    setIsOpenBonusModal(true);
+  };
+
+  const handleCloseBonusModal = () => {
+    initializeBonusModalData();
+    setIsOpenBonusModal(false);
+  };
+
+  const generateAndGetPreviousPaySlips = async () => {
+    try {
+      const response = await createPreviousPayslips();
+    } catch (error) {
+      console.error("Error generating previous pay slips", error);
+    }
+  };
+
+  const fetchPayslipsForEmployee = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await getAllPayslipsForEmployee(id);
+      setAllPaySplips(response);
+    } catch (error) {
+      console.error("Error fetching pay slips for employee", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveNewBonusType = async (data) => {
+    try {
+      const response = await postNewBonusType(data);
+      fetchAllBonus();
+    } catch (error) {
+      console.error("Error saving new bonus type", error);
+    }
+  };
+
+  const fetchAllBonus = async () => {
+    try {
+      const response = await getAllBonusesTypes();
+      setAllBonusTypes(response);
+    } catch (error) {
+      console.error("Error fetching bonus types", error);
+    }
+  };
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await getAllEmployees();
+      setEmployees(response);
+    } catch (error) {
+      console.error("Error fetching employees", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedEmployee) {
+      fetchPayslipsForEmployee(selectedEmployee);
+    }
+  }, [selectedEmployee]);
+
+  useEffect(() => {
+    generateEmployeeOptions();
+  }, [employees]);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome tab="PayRoles" />
-        <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
-          <div
-            className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
-            onClick={handleAddClick}
-          >
-            Add PayRole
+        <Welcome name="Welcome Lakmini" tab="PayRoles" />
+        <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-between gap-x-3">
+          <div className="w-[350px]">
+            <CommonSearchableSelect
+              onChange={(selected) => {
+                setSelectedEmployee(selected?.value || null);
+              }}
+              options={employeeOptions}
+              placeholder="Select Employee"
+            />
           </div>
-        </div>
-        <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end gap-x-10">
-          {/* search */}
-          {/* <div>
-            <form className="max-w-md mx-auto">
-              <label
-                for="default-search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only"
-              >
-                Search
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  id="default-search"
-                  class="block w-[300px] p-4 ps-10 text-sm text-white font-bold border border-gray-300 rounded-lg bg-[#013a63] focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Search employee"
-                  required
-                />
-                <button
-                  type="submit"
-                  class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
-          </div> */}
-          {/* <div>
-            <form className="max-w-sm mx-auto">
-              <select
-                id="countries"
-                className="bg-[#013a63] border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full py-4 px-3"
-              >
-                <option selected>Month</option>
-                <option value="US">January</option>
-                <option value="CA">February</option>
-                <option value="FR">March</option>
-                <option value="DE">April</option>
-                <option value="DE">May</option>
-              </select>
-            </form>
-          </div> */}
+          <div className="flex gap-x-2">
+            <button className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 mb-2">
+              Assing Bonus To Employee
+            </button>
+            <button
+              className="focus:outline-none text-white bg-[#013a63] hover:bg-[#163854] focus:ring-4 focus:ring-[#3796db] font-medium rounded-lg px-5 py-3 mb-2"
+              onClick={handleOpenBonusModal}
+            >
+              Add Bonus
+            </button>
+            <button
+              className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg px-5 py-3 mb-2"
+              onClick={generateAndGetPreviousPaySlips}
+            >
+              Generate Pay Slips
+            </button>
+          </div>
         </div>
         <div className="attendence-details mt-8">
           <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left rtl:text-right">
-              <thead class="text-xs text-white uppercase bg-[#6a44d9]">
-                <tr>
-                  <th scope="col" class="px-6 py-5">
-                    User Name
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Name
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Position
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Department
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Email
-                  </th>
-                  <th scope="col" class="px-6 py-5">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {payRole.map((payItem, key) => {
-                  return (
-                    <tr
-                      id={key}
-                      className="bg-white border-b text-gray-900 font-medium"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {payItem.userName}
-                      </td>
-                      <td className="px-6 py-4">{payItem.name}</td>
-                      <td className="px-6 py-4">{payItem.position}</td>
-                      <td className="px-6 py-4">{payItem.depatment}</td>
-                      <td className="px-6 py-4">{payItem.email}</td>
-                      <td className="px-6 py-4">
-                        <div className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md">
-                          View
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {payAdd && <PayRoleForm closeModal={handleAddCloseClick} />}
+            {isLoading && <Loading />}
+            {!isLoading &&
+              selectedEmployee === null &&
+              employees?.length > 0 && (
+                <div className="flex items-center justify-center p-5">
+                  <p className="text-gray-500">Please Select an employee</p>
+                </div>
+              )}
+            {!isLoading &&
+              selectedEmployee !== null &&
+              allPaySlips !== undefined &&
+              allPaySlips.length > 0 && (
+                <PaySlipTable
+                  allPaySlips={allPaySlips}
+                  handleOpenPaySlipViewModal={handleOpenPaySlipViewModal}
+                  setPaySlipViewModalData={setPaySlipViewModalData}
+                />
+              )}
+            {!isLoading &&
+              selectedEmployee !== null &&
+              allPaySlips?.length === 0 && (
+                <div className="flex items-center justify-center p-5">
+                  <p className="text-gray-500">
+                    No pay slips for selected employee
+                  </p>
+                </div>
+              )}
+            {isPaySlipViewModalOpen && (
+              <PaySlipViewModal
+                paySlipViewModalData={paySlipViewModalData}
+                handleClosePaySlipViewModal={handleClosePaySlipViewModal}
+              />
+            )}
+            {isOpenBonusModal && (
+              <AddBonusModal
+                closeModal={handleCloseBonusModal}
+                bonusModalData={bonusModalData}
+                setBonusModalData={setBonusModalData}
+                saveNewBonusType={saveNewBonusType}
+              />
+            )}
           </div>
         </div>
       </div>

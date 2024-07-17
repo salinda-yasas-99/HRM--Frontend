@@ -22,8 +22,8 @@ const DashBoard = () => {
   const [posCount, setPosCount] = useState();
   const [deptCount, setDeptCount] = useState();
   const [leavCount, setLeavesCount] = useState();
-  const [empByDeptData, setEmpByDeptData] = useState([]);
-  const [empByPosData, setEmpByPosData] = useState([]);
+  const [empByDeptData, setEmpByDeptData] = useState();
+  const [empByPosData, setEmpByPosData] = useState();
 
   const fetchEmployees = async () => {
     const fetched = await getAllEmployees();
@@ -66,6 +66,7 @@ const DashBoard = () => {
     try {
       const response = await getEmployeeCountByPosition();
       setEmpByPosData(response);
+      console.log(response);
     } catch (error) {
       console.error(
         "Error fetching data for Employee Count by Position Chart",
