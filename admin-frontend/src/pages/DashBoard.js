@@ -5,11 +5,16 @@ import PositionCountCard from "../components/dashboard/PositionCountCard";
 import DepartmentCountCard from "../components/dashboard/DepartmentCountCard";
 import LeaveCountCard from "../components/dashboard/LeaveCountCard";
 import EmployeesByDepartmentChart from "../components/dashboard/EmployeesByDepartmentChart";
-import EmptyPositionsChart from "../components/dashboard/EmptyPositionsChart";
+import EmployeesByPositionChart from "../components/dashboard/EmployeesByPositionChart";
 import { getAllEmployees } from "../Services/RestApiCalls";
 import { getAllPositions } from "../Services/PositionsAPi";
 import { getAllDepartments } from "../Services/DepartmentAPI";
 import { getAllAnnouncements } from "../Services/AnnouncementApi";
+import { getPendingLeaves } from "../Services/LeaveService";
+import {
+  getEmployeeCountByDepartment,
+  getEmployeeCountByPosition,
+} from "../Services/DashboardChartService";
 
 const DashBoard = () => {
   const [empCount, setEmpCount] = useState();
@@ -17,6 +22,8 @@ const DashBoard = () => {
   const [posCount, setPosCount] = useState();
   const [deptCount, setDeptCount] = useState();
   const [leavCount, setLeavesCount] = useState();
+  const [empByDeptData, setEmpByDeptData] = useState([]);
+  const [empByPosData, setEmpByPosData] = useState([]);
 
   const fetchEmployees = async () => {
     const fetched = await getAllEmployees();
@@ -38,16 +45,43 @@ const DashBoard = () => {
     setDeptCount(fetched.length);
   };
 
-  // const fetchLeaves = async () => {
-  //   const fetched = await get();
-  //   setLeavesCount(fetched.length);
-  // };
+  const fetchLeaves = async () => {
+    const fetched = await getPendingLeaves();
+    setLeavesCount(fetched.length);
+  };
+
+  const getDataForEmployessByDepartmentChart = async () => {
+    try {
+      const response = await getEmployeeCountByDepartment();
+      setEmpByDeptData(response);
+    } catch (error) {
+      console.error(
+        "Error fetching data for Employees by Department Chart",
+        error
+      );
+    }
+  };
+
+  const getDataForEmployeeCountByPositionChart = async () => {
+    try {
+      const response = await getEmployeeCountByPosition();
+      setEmpByPosData(response);
+    } catch (error) {
+      console.error(
+        "Error fetching data for Employee Count by Position Chart",
+        error
+      );
+    }
+  };
 
   useEffect(() => {
     fetchEmployees();
     fetchAnnouncements();
     fetchPositions();
     fetchDepartments();
+    fetchLeaves();
+    getDataForEmployessByDepartmentChart();
+    getDataForEmployeeCountByPositionChart();
   }, []);
   return (
     <div className="flex flex-col bg-[#cfe0fa] min-h-[100vh] ml-[220px]">
@@ -66,13 +100,19 @@ const DashBoard = () => {
             <DepartmentCountCard departmentCount={deptCount} />
           </div>
           <div className="bg-white flex rounded-xl w-1/5 h-[10rem]">
-            <LeaveCountCard leaveCount={5} />
+            <LeaveCountCard leaveCount={leavCount} />
           </div>
         </div>
         <div className="flex gap-x-2 justify-around bg-white p-10  md:w-[96.4%] my-10 rounded-xl">
-          <EmployeesByDepartmentChart />
+          <EmployeesByDepartmentChart
+            depData={empByDeptData?.departmentList}
+            countData={empByDeptData?.employeeCount}
+          />
           <div className="w-1 bg-[#cfe0fa] h-100"></div>
-          <EmptyPositionsChart />
+          <EmployeesByPositionChart
+            possitionData={empByPosData?.positionList}
+            countData={empByPosData?.employeeCount}
+          />
         </div>
       </div>
     </div>

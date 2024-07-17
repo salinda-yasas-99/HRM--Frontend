@@ -1,7 +1,7 @@
 import React from "react";
 import ReactAppexChart from "react-apexcharts";
 
-const EmptyPositionsChart = ({
+const EmployeesByPositionChart = ({
   possitionData = ["Management", "Developers", "Other"],
   countData = [30, 20, 50],
 }) => {
@@ -29,7 +29,7 @@ const EmptyPositionsChart = ({
   };
   return (
     <div className="w-[45%] h-full">
-      <h3 className="mb-10">Empty Positions</h3>
+      <h3 className="mb-10">Employees By Position</h3>
       <ReactAppexChart
         options={chartData.options}
         series={chartData.series}
@@ -42,4 +42,4 @@ const EmptyPositionsChart = ({
   );
 };
 
-export default EmptyPositionsChart;
+export default EmployeesByPositionChart;
