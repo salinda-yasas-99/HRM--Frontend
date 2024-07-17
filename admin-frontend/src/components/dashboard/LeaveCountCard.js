@@ -10,7 +10,7 @@ const LeaveCountCard = ({ leaveCount }) => {
         </div>
         <div className="ml-3">
           <h4 className="text-4xl font-semibold text-gray-700">{leaveCount}</h4>
-          <div className="text-gray-500 text-sm">Leaves</div>
+          <div className="text-gray-500 text-sm">Leave Applications</div>
         </div>
       </div>
     </a>
