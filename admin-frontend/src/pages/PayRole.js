@@ -3,6 +3,7 @@ import Welcome from "../components/Welcome";
 import PaySlipTable from "../components/paySlip/PaySlipTable";
 import { getAllEmployees } from "../Services/RestApiCalls";
 import {
+  addUserToBonusType,
   createPreviousPayslips,
   getAllBonusesTypes,
   getAllPayslipsForEmployee,
@@ -12,6 +13,7 @@ import Loading from "../components/common/Loading";
 import CommonSearchableSelect from "../components/common/CommonSearchableSelect";
 import PaySlipViewModal from "../components/paySlip/PaySlipViewModal";
 import AddBonusModal from "../components/paySlip/AddBonusModal";
+import AssignBonusToEmpModal from "../components/paySlip/AssignBonusToEmpModal";
 
 const PayRole = () => {
   const [allPaySlips, setAllPaySplips] = useState([]);
@@ -27,6 +29,14 @@ const PayRole = () => {
     bonusAmount: null,
   });
   const [allBonusTypes, setAllBonusTypes] = useState([]);
+  const [isAssignBonusToEmpModalOpen, setIsAssignBonusToEmpModalOpen] =
+    useState(false);
+  const [assignBonusToEmpModalData, setAssignBonusToEmpModalData] = useState({
+    bonusId: null,
+    employeeId: null,
+    month: null,
+    bonusAmount: null,
+  });
 
   const generateEmployeeOptions = () => {
     const options = employees.map((employee) => ({
@@ -36,11 +46,29 @@ const PayRole = () => {
     setEmployeeOptions(options);
   };
 
+  const initializeAssignBonusToEmpModalData = () => {
+    setAssignBonusToEmpModalData({
+      bonusId: null,
+      employeeId: null,
+      month: null,
+      bonusAmount: null,
+    });
+  };
+
   const initializeBonusModalData = () => {
     setBonusModalData({
       bonusTypeName: null,
       bonusAmount: null,
     });
+  };
+
+  const handleOpenAssignBonusToEmpModal = () => {
+    setIsAssignBonusToEmpModalOpen(true);
+  };
+
+  const handleCloseAssignBonusToEmpModal = () => {
+    initializeAssignBonusToEmpModalData();
+    setIsAssignBonusToEmpModalOpen(false);
   };
 
   const handleOpenPaySlipViewModal = () => {
@@ -108,6 +136,17 @@ const PayRole = () => {
     }
   };
 
+  const assignBonusTypeToEmployee = async (data) => {
+    try {
+      const response = await addUserToBonusType(data);
+      if (selectedEmployee) {
+        fetchPayslipsForEmployee(selectedEmployee);
+      }
+    } catch (error) {
+      console.error("Error assigning bonus to employee", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedEmployee) {
       fetchPayslipsForEmployee(selectedEmployee);
@@ -120,6 +159,7 @@ const PayRole = () => {
 
   useEffect(() => {
     fetchEmployees();
+    fetchAllBonus();
   }, []);
 
   return (
@@ -137,8 +177,11 @@ const PayRole = () => {
             />
           </div>
           <div className="flex gap-x-2">
-            <button className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 mb-2">
-              Assing Bonus To Employee
+            <button
+              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 mb-2"
+              onClick={handleOpenAssignBonusToEmpModal}
+            >
+              Assign Bonus To Employee
             </button>
             <button
               className="focus:outline-none text-white bg-[#013a63] hover:bg-[#163854] focus:ring-4 focus:ring-[#3796db] font-medium rounded-lg px-5 py-3 mb-2"
@@ -148,7 +191,12 @@ const PayRole = () => {
             </button>
             <button
               className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg px-5 py-3 mb-2"
-              onClick={generateAndGetPreviousPaySlips}
+              onClick={() => {
+                generateAndGetPreviousPaySlips();
+                alert(
+                  "Pay slips for the previous month generated successfully!"
+                );
+              }}
             >
               Generate Pay Slips
             </button>
@@ -195,6 +243,16 @@ const PayRole = () => {
                 bonusModalData={bonusModalData}
                 setBonusModalData={setBonusModalData}
                 saveNewBonusType={saveNewBonusType}
+              />
+            )}
+            {isAssignBonusToEmpModalOpen && (
+              <AssignBonusToEmpModal
+                closeModal={handleCloseAssignBonusToEmpModal}
+                assignBonusToEmpModalData={assignBonusToEmpModalData}
+                setAssignBonusToEmpModalData={setAssignBonusToEmpModalData}
+                employeeOptions={employeeOptions}
+                allBonusTypes={allBonusTypes}
+                assignBonusTypeToEmployee={assignBonusTypeToEmployee}
               />
             )}
           </div>
