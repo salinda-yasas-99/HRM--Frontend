@@ -114,7 +114,7 @@ const Departments = () => {
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome name="Welcome Lakmini" tab="Departments" />
+        <Welcome tab="Departments" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
           <button
             className="focus:outline-none text-white bg-[#013a63] hover:bg-[#0f283a] focus:ring-4 focus:ring-[#013a63] rounded-lg  px-5 py-3 mb-2"

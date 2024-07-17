@@ -212,10 +212,11 @@ export const getEmployeeDetailsAdmin = async () => {
     withCredentials: true,
   });
   try {
+    // http://localhost:8080/api/v1/users/${uid}/ADMIN
     const response = await authAxios.get(
-      `http://localhost:8080/api/v1/users/${uid}`
+      `http://localhost:8080/api/v1/users/${uid}/ADMIN`
     );
-    console.log("This is response", response);
+    console.log("This is response of emrttrey", response.data);
     return response.data;
   } catch (err) {
     console.log("This is error", err);

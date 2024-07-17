@@ -204,7 +204,7 @@ const AddNewemployee = () => {
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px] pb-6">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome name="Welcome Lakmini" tab="Register Employee" />
+        <Welcome tab="Register Employee" />
         {/* Add new employee */}
         <div className="flex flex-col bg-white pl-10 pt-5 md:w-[96.4%] rounded-xl mt-7 pb-5">
           <div className="flex flex-row gap-x-16">

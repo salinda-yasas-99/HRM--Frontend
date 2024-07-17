@@ -53,7 +53,7 @@ const Positions = () => {
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px]">
       <div className="flex flex-col pl-10 pt-5">
-        <Welcome name="Welcome Lakmini" tab="Positions" />
+        <Welcome tab="Positions" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
           <div
             className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
