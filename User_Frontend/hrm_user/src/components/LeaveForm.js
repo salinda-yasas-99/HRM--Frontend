@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const LeaveForm = ({
   closeModal,
@@ -7,6 +7,8 @@ const LeaveForm = ({
   leaveFormData,
   setLeaveFormData,
 }) => {
+  const [maxLeaves, setMaxLeaves] = useState(0);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formattedLeaveData = {
@@ -64,10 +66,17 @@ const LeaveForm = ({
                   placeholder="Select leave type"
                   required
                   onChange={(e) => {
+                    const selectedLeaveTypeName = e.target.value;
                     setLeaveFormData((prev) => ({
                       ...prev,
-                      leaveTypeName: e.target.value,
+                      leaveTypeName: selectedLeaveTypeName,
                     }));
+                    const selectedLeaveType = leaveTypes.find(
+                      (type) => type.leaveTypeName === selectedLeaveTypeName
+                    );
+                    if (selectedLeaveType) {
+                      setMaxLeaves(selectedLeaveType.noOfLeaves);
+                    }
                   }}
                 >
                   <option value="">Select Leave Type</option>
@@ -94,6 +103,8 @@ const LeaveForm = ({
                       noOfDays: e.target.value,
                     }));
                   }}
+                  min={1}
+                  max={maxLeaves}
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
