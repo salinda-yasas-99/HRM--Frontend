@@ -101,6 +101,12 @@ const Employee = () => {
     }
   };
 
+  const convertMillisecondsToDate = (milliseconds) => {
+    const date = new Date(milliseconds);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="flex flex-col bg-[#d0e0e5] min-h-[100vh] ml-[220px] pb-10">
       <div className="flex flex-col pl-10 pt-5">
@@ -193,7 +199,7 @@ const Employee = () => {
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Joined date</div>
                     <div>:</div>
-                    <div>{employee.joinedDate}</div>
+                    <div>{convertMillisecondsToDate(employee.joinedDate)}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Salary</div>

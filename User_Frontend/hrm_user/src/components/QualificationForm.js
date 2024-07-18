@@ -126,14 +126,14 @@ const QualificationForm = ({ closeModal, onSubmit }) => {
                   htmlFor="marks"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Marks
+                  Description
                 </label>
                 <input
                   type="text"
                   name="qualificationDesc"
                   id="qualificationDesc"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
-                  placeholder="enter marks"
+                  placeholder="Enter description"
                   value={qualification.qualificationDesc}
                   onChange={handleChange}
                   required
