@@ -78,11 +78,27 @@ const AddNewemployee = () => {
     confirmPassword: "",
   });
 
+  // const handleChange = (e) => {
+  //   const { id, value } = e.target;
+  //   setEmployee({
+  //     ...employee,
+  //     [id]: value,
+  //   });
+  // };
+
   const handleChange = (e) => {
     const { id, value } = e.target;
+    let formattedValue = value; // Default to plain string value
+
+    // Special handling for date inputs
+    if (id === "joinedDate" || id === "dob") {
+      // Convert date string to ISO format
+      formattedValue = new Date(value).toISOString().split("T")[0];
+    }
+
     setEmployee({
       ...employee,
-      [id]: value,
+      [id]: formattedValue,
     });
   };
 
@@ -156,7 +172,7 @@ const AddNewemployee = () => {
       return;
     }
 
-    console.log("Form Data:", employee);
+    console.log("Form Data employee:", employee);
 
     try {
       await AddNewEmployee(employee);
@@ -348,17 +364,6 @@ const AddNewemployee = () => {
                     </select>
                   </div>
                 </div>
-                {/* <div className="flex flex-row px-5 gap-x-[20%]">
-                  <div className="w-[140px]">Salary</div>
-                  <div>
-                    <TextBox
-                      label="basicSalary"
-                      value={employee.basicSalary}
-                      onChange={handleChange}
-                      required={true}
-                    />
-                  </div>
-                </div> */}
               </div>
               {/* cell 3*/}
               <div className="grid grid-col-1 gap-y-2 ">
@@ -368,12 +373,22 @@ const AddNewemployee = () => {
                 <div className="flex flex-row px-5 gap-x-[20%]">
                   <div className="w-[140px]">Start date</div>
                   <div>
-                    <TextBox
+                    {/* <TextBox
                       label="joinedDate"
                       value={employee.joinedDate}
                       onChange={handleChange}
                       placeholder="ex:- 1987-05-30"
                       required={true}
+                    /> */}
+                    <input
+                      type="date"
+                      id="joinedDate"
+                      label="joinedDate"
+                      className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-[300px] p-2 border-gray-500 placeholder-gray-400"
+                      placeholder="2024-02-01"
+                      required
+                      onChange={handleChange}
+                      value={employee.joinedDate}
                     />
                   </div>
                 </div>
@@ -483,11 +498,21 @@ const AddNewemployee = () => {
                 <div className="flex flex-row px-5 gap-x-[20%]">
                   <div className="w-[140px]">Date of birth</div>
                   <div>
-                    <TextBox
+                    {/* <TextBox
                       label="dob"
                       value={employee.dob}
                       onChange={handleChange}
                       required={true}
+                    /> */}
+                    <input
+                      type="date"
+                      id="dob"
+                      label="dob"
+                      className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-[300px] p-2 border-gray-500 placeholder-gray-400"
+                      placeholder="2024-02-01"
+                      required
+                      onChange={handleChange}
+                      value={employee.dob}
                     />
                   </div>
                 </div>

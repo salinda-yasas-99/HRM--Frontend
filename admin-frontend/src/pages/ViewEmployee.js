@@ -12,39 +12,6 @@ const ViewEmployee = () => {
   const [qualifications, setQualifications] = useState([]);
   const [experiences, setExperiences] = useState([]);
 
-  // const [experience, setExperience] = useState([
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  //   {
-  //     previuosCompany: "ABC Company Pvt(Ltd)",
-  //     duration: "2021 - 2022",
-  //     designation: "UI / UX Engineer",
-  //   },
-  // ]);
-
-  // const [qualification, setQualification] = useState([
-  //   {
-  //     qualification: "Bcs. Information Technology (Special in SE)",
-  //     university: "University of Wayamba",
-  //     duration: "2020 - 2024",
-  //     score: "2.8",
-  //   },
-  //   {
-  //     qualification: "Bcs. update (Special in SE)",
-  //     university: "University of moratuewa",
-  //     duration: "2020 - 2024",
-  //     score: "2.8",
-  //   },
-  // ]);
-
   const fetchExpereience = async () => {
     const fetched = await getExpereienceByUser(employee.employeeId);
     setExperiences(fetched);
@@ -57,6 +24,12 @@ const ViewEmployee = () => {
   const fetchQualifications = async () => {
     const fetched = await getQualificationByUser(employee.employeeId);
     setQualifications(fetched);
+  };
+
+  const convertMillisecondsToDate = (milliseconds) => {
+    const date = new Date(milliseconds);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString(undefined, options);
   };
 
   useEffect(() => {
@@ -158,7 +131,7 @@ const ViewEmployee = () => {
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Joined date</div>
                     <div>:</div>
-                    <div>{employee.joinedDate}</div>
+                    <div>{convertMillisecondsToDate(employee.joinedDate)}</div>
                   </div>
                   <div className="flex flex-row px-5 gap-x-[20%]">
                     <div className="w-[140px]">Salary</div>
