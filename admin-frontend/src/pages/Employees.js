@@ -132,9 +132,9 @@ const Employees = () => {
                   <th scope="col" class="px-6 py-5">
                     action
                   </th>
-                  <th scope="col" class="px-6 py-5">
+                  {/* <th scope="col" class="px-6 py-5">
                     action
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
@@ -158,7 +158,7 @@ const Employees = () => {
                             View
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
                           <div
                             className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md cursor-pointer"
                             onClick={() => {
@@ -167,7 +167,7 @@ const Employees = () => {
                           >
                             Delete
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })
