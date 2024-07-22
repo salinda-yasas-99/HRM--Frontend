@@ -98,7 +98,7 @@ const Attendences = () => {
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end"></div>
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end gap-x-10">
           <div
-            className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
+            className="bg-[#013a63] hover:bg-blue-900 p-3 rounded-lg text-white font-medium"
             onClick={handleDownload}
           >
             Export Attendence

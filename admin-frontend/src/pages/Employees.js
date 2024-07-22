@@ -152,7 +152,7 @@ const Employees = () => {
                         <td className="px-6 py-4">{emp.workEmail}</td>
                         <td className="px-6 py-4">
                           <div
-                            className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md cursor-pointer"
+                            className="bg-[#013a63] hover:bg-blue-950 text-white flex justify-center py-[5px] rounded-md cursor-pointer"
                             onClick={() => selectEmployee(emp)}
                           >
                             View

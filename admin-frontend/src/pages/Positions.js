@@ -56,7 +56,7 @@ const Positions = () => {
         <Welcome tab="Positions" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
           <div
-            className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
+            className="bg-[#013a63] hover:bg-blue-950 p-3 rounded-lg text-white font-medium"
             onClick={handleAddClick}
           >
             Add New Position
@@ -97,7 +97,7 @@ const Positions = () => {
 
                         <td className="px-6 py-4">
                           <div
-                            className="bg-[#0c8ce9] flex justify-center py-[5px] rounded-md"
+                            className="bg-[#1d4ed8] hover:bg-blue-900 flex justify-center py-[5px] rounded-md text-white"
                             onClick={() => {
                               handleUpdateClick(pos);
                             }}
@@ -107,7 +107,7 @@ const Positions = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div
-                            className="bg-[#ed1b24] flex justify-center py-[5px] rounded-md"
+                            className="bg-[#ed1b24] hover:bg-red-800 flex justify-center py-[5px] rounded-md text-white"
                             onClick={() => handleDeleteClick(pos.positionId)}
                           >
                             Delete

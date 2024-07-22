@@ -8,12 +8,14 @@ import {
   getAllBonusesTypes,
   getAllPayslipsForEmployee,
   postNewBonusType,
+  addAllEmployeeBonusApi,
 } from "../Services/PaySlipService";
 import Loading from "../components/common/Loading";
 import CommonSearchableSelect from "../components/common/CommonSearchableSelect";
 import PaySlipViewModal from "../components/paySlip/PaySlipViewModal";
 import AddBonusModal from "../components/paySlip/AddBonusModal";
 import AssignBonusToEmpModal from "../components/paySlip/AssignBonusToEmpModal";
+import AllEmployeeBonus from "../components/paySlip/AllEmployeeBonus";
 
 const PayRole = () => {
   const [allPaySlips, setAllPaySplips] = useState([]);
@@ -37,6 +39,14 @@ const PayRole = () => {
     month: null,
     bonusAmount: null,
   });
+
+  const [allemployeeBonusModel, setAllemployeeBonusModel] = useState({
+    bonusId: null,
+    month: null,
+    bonusAmount: null,
+  });
+  const [isAllEmployeeeBonusModelOpen, setIsAllEmployeeeBonusModelOpen] =
+    useState(false);
 
   const generateEmployeeOptions = () => {
     const options = employees.map((employee) => ({
@@ -89,6 +99,14 @@ const PayRole = () => {
     setIsOpenBonusModal(false);
   };
 
+  const handleOpenAllEmployeeBonus = () => {
+    setIsAllEmployeeeBonusModelOpen(true);
+  };
+
+  const handleCloseAllEmployeeBonus = () => {
+    //initializeAssignBonusToEmpModalData();
+    setIsAllEmployeeeBonusModelOpen(false);
+  };
   const generateAndGetPreviousPaySlips = async () => {
     try {
       const response = await createPreviousPayslips();
@@ -147,6 +165,15 @@ const PayRole = () => {
     }
   };
 
+  const AllEmployeeBonusSubmit = async (data) => {
+    try {
+      const response = await addAllEmployeeBonusApi(data);
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error assigning bonus to all employees", error);
+    }
+  };
+
   useEffect(() => {
     if (selectedEmployee) {
       fetchPayslipsForEmployee(selectedEmployee);
@@ -177,6 +204,12 @@ const PayRole = () => {
             />
           </div>
           <div className="flex gap-x-2">
+            <button
+              className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 mb-2"
+              onClick={handleOpenAllEmployeeBonus}
+            >
+              All Employee Bonus
+            </button>
             <button
               className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg px-5 py-3 mb-2"
               onClick={handleOpenAssignBonusToEmpModal}
@@ -253,6 +286,15 @@ const PayRole = () => {
                 employeeOptions={employeeOptions}
                 allBonusTypes={allBonusTypes}
                 assignBonusTypeToEmployee={assignBonusTypeToEmployee}
+              />
+            )}
+            {isAllEmployeeeBonusModelOpen && (
+              <AllEmployeeBonus
+                closeModal={handleCloseAllEmployeeBonus}
+                allEmpBonusModel={allemployeeBonusModel}
+                setAllEmpBonus={setAllemployeeBonusModel}
+                allBonusTypes={allBonusTypes}
+                allEmpBounsSubmit={AllEmployeeBonusSubmit}
               />
             )}
           </div>
