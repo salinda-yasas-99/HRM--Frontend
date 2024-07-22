@@ -16,7 +16,8 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "react-to-print": "^2.15.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
   },
   "scripts": {
     "start": "react-scripts start",
