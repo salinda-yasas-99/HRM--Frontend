@@ -13,8 +13,10 @@ const LeaveForm = ({
     e.preventDefault();
     const formattedLeaveData = {
       ...leaveFormData,
-      startDate: new Date(leaveFormData.startDate).toISOString(),
-      endDate: new Date(leaveFormData.endDate).toISOString(),
+      //startDate: new Date(leaveFormData.startDate).toISOString(),
+      startDate: leaveFormData.startDate,
+      //endDate: new Date(leaveFormData.endDate).toISOString(),
+      endDate: leaveFormData.endDate,
     };
     applyForLeave(formattedLeaveData);
   };
@@ -116,10 +118,20 @@ const LeaveForm = ({
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
                   value={leaveFormData?.startDate || ""}
                   required
+                  // onChange={(e) => {
+                  //   setLeaveFormData((prev) => ({
+                  //     ...prev,
+                  //     startDate: e.target.value,
+                  //   }));
+                  // }}
                   onChange={(e) => {
+                    const formattedDate = new Date(e.target.value)
+                      .toISOString()
+                      .split("T")[0];
+                    console.log("Formatted Date:", formattedDate); // Debugging line
                     setLeaveFormData((prev) => ({
                       ...prev,
-                      startDate: e.target.value,
+                      startDate: formattedDate,
                     }));
                   }}
                 />
@@ -131,12 +143,16 @@ const LeaveForm = ({
                 <input
                   type="date"
                   className="bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 border-gray-500 placeholder-gray-400"
+                  //value={leaveFormData?.endDate || ""}
                   value={leaveFormData?.endDate || ""}
                   required
                   onChange={(e) => {
+                    const formattedDateEnd = new Date(e.target.value)
+                      .toISOString()
+                      .split("T")[0];
                     setLeaveFormData((prev) => ({
                       ...prev,
-                      endDate: e.target.value,
+                      endDate: formattedDateEnd,
                     }));
                   }}
                 />
