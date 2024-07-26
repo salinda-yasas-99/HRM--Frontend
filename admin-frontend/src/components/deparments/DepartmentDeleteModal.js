@@ -57,7 +57,7 @@ const DepartmentDeleteModal = ({
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500">
-              {`Are you sure you want to delete this "${department?.departmentName}" announcement?`}
+              {`Are you sure you want to delete this "${department?.departmentName}" department?`}
             </h3>
             <button
               data-modal-hide="popup-modal"
