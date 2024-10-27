@@ -18,16 +18,55 @@ export const getPendingLeaves = async () => {
   }
 };
 
-function getCurrentYearMonth() {
+// function getCurrentYearMonth() {
+//   const date = new Date();
+//   const year = date.getFullYear();
+//   const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
+//   return `${year}-${month}`;
+// }
+
+// export const getExcelLeaves = async () => {
+//   const currentYearMonth = getCurrentYearMonth();
+//   console.log(currentYearMonth); // Outputs in 'YYYY-MM' format
+//   const Token = localStorage.getItem("token");
+//   const authAxios = axios.create({
+//     headers: {
+//       Authorization: `Bearer ${Token}`,
+//     },
+//     withCredentials: true,
+//   });
+//   try {
+//     const response = await authAxios.get(
+//       `http://localhost:8080/api/leave-application/leave-applications-by-month`,
+//       { params: { month: currentYearMonth } }
+//     );
+//     console.log("this is excel leave data", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching leave types for employees:", error);
+//   }
+// };
+
+export const getCurrentYearMonth = () => {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
   return `${year}-${month}`;
-}
+};
 
-export const getExcelLeaves = async () => {
-  const currentYearMonth = getCurrentYearMonth();
-  console.log(currentYearMonth); // Outputs in 'YYYY-MM' format
+export const generateMonthOptions = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const months = [];
+
+  for (let month = 1; month <= 12; month++) {
+    const formattedMonth = String(month).padStart(2, "0");
+    months.push(`${year}-${formattedMonth}`);
+  }
+  return months;
+};
+
+export const getExcelLeaves = async (month = getCurrentYearMonth()) => {
   const Token = localStorage.getItem("token");
   const authAxios = axios.create({
     headers: {
@@ -38,12 +77,12 @@ export const getExcelLeaves = async () => {
   try {
     const response = await authAxios.get(
       `http://localhost:8080/api/leave-application/leave-applications-by-month`,
-      { params: { month: currentYearMonth } }
+      { params: { month } }
     );
-    console.log("this is excel leave data", response.data);
+    console.log("This is excel leave data:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error fetching leave types for employees:", error);
+    console.error("Error fetching leave data:", error);
   }
 };
 

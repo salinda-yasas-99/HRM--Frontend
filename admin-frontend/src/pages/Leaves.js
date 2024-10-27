@@ -6,38 +6,30 @@ import RejectModal from "../components/leave/RejectModal";
 import {
   approveOrRejectLeave,
   getPendingLeaves,
+  getCurrentYearMonth,
+  getExcelLeaves,
+  generateMonthOptions,
 } from "../Services/LeaveService";
-import { getExcelLeaves } from "../Services/LeaveService";
 import * as XLSX from "xlsx";
 
 const Leaves = () => {
   const [pendingLeaves, setPendingLeaves] = useState([]);
-
   const [approvalModalStatus, setApprovalModalStatus] = useState(false);
   const [rejectModalStatus, setRejectModalStatus] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [excelData, setExcelData] = useState(null);
+  const [excelData, setExcelData] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentYearMonth()); // Initial selected month
 
-  const handleApproveClick = () => {
-    setApprovalModalStatus(true);
-  };
-
-  const handleRejectClick = () => {
-    setRejectModalStatus(true);
-  };
-
-  const handleCloseApprovalModal = () => {
-    setApprovalModalStatus(false);
-  };
-
-  const handleCloseRejectModal = () => {
-    setRejectModalStatus(false);
-  };
+  const handleApproveClick = () => setApprovalModalStatus(true);
+  const handleRejectClick = () => setRejectModalStatus(true);
+  const handleCloseApprovalModal = () => setApprovalModalStatus(false);
+  const handleCloseRejectModal = () => setRejectModalStatus(false);
+  const monthOptions = generateMonthOptions();
 
   const approveLeave = async (id) => {
     try {
-      const response = await approveOrRejectLeave(id, "Approved");
-      fetchPendingLeaves();
+      await approveOrRejectLeave(id, "Approved");
+      fetchPendingLeaves(selectedMonth);
     } catch (error) {
       console.error("Error approving leave:", error);
     }
@@ -45,42 +37,28 @@ const Leaves = () => {
 
   const rejectLeave = async (id) => {
     try {
-      const response = await approveOrRejectLeave(id, "Rejected");
-      fetchPendingLeaves();
+      await approveOrRejectLeave(id, "Rejected");
+      fetchPendingLeaves(selectedMonth);
     } catch (error) {
       console.error("Error rejecting leave:", error);
     }
   };
 
-  const fetchPendingLeaves = async () => {
+  const fetchPendingLeaves = async (month) => {
     try {
-      const response = await getPendingLeaves();
+      const response = await getExcelLeaves(month);
       setPendingLeaves(response);
+      setExcelData(response);
     } catch (error) {
       console.error("Error fetching pending leaves:", error);
     }
   };
 
   useEffect(() => {
-    fetchPendingLeaves();
-  }, []);
-
-  const fetchExcelLeaves = async () => {
-    try {
-      const response = await getExcelLeaves();
-
-      setExcelData(response);
-    } catch (error) {
-      console.error("Error fetching excel leaves:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchExcelLeaves();
-  }, []);
+    fetchPendingLeaves(selectedMonth); // Initial load
+  }, [selectedMonth]);
 
   const handleDownload = () => {
-    console.log("test button");
     const rows = excelData.map((leaveform) => ({
       employeeId: leaveform.employeeId,
       employeeName: leaveform.employeeName,
@@ -93,27 +71,9 @@ const Leaves = () => {
       approvedStatus: leaveform.approvedStatus,
     }));
 
-    // create workbook and worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(rows);
-
     XLSX.utils.book_append_sheet(workbook, worksheet, "LeaveForms");
-
-    // customize header names
-    XLSX.utils.sheet_add_aoa(worksheet, [
-      [
-        "employeeId",
-        "employeeName",
-        "leaveApplicationFormId",
-        "leaveTypeName",
-        "noOfDays",
-        "startDate",
-        "endDate",
-        "reason",
-        "approvedStatus",
-      ],
-    ]);
-
     XLSX.writeFile(workbook, "LeaveFormReport.xlsx", { compression: true });
   };
 
@@ -122,6 +82,17 @@ const Leaves = () => {
       <div className="flex flex-col pl-10 pt-5">
         <Welcome tab="Leaves" />
         <div className="flex flex-row md:w-[96.4%] mt-[25px] justify-end">
+          <select
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="mr-4 p-2 rounded"
+          >
+            {monthOptions.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
           <div
             className="bg-[#013a63] p-3 rounded-lg text-white font-medium"
             onClick={handleDownload}
@@ -129,17 +100,16 @@ const Leaves = () => {
             Export Leaves
           </div>
         </div>
-        <div className="leave details mt-8">
-          <div class="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
-            {pendingLeaves !== undefined && pendingLeaves.length > 0 && (
+        <div className="leave-details mt-8">
+          <div className="relative md:w-[96.4%] overflow-x-auto shadow-md sm:rounded-lg">
+            {pendingLeaves.length > 0 ? (
               <LeavesTable
                 pendingLeaves={pendingLeaves}
                 handleApproveClick={handleApproveClick}
                 handleRejectClick={handleRejectClick}
                 setSelectedId={setSelectedId}
               />
-            )}
-            {pendingLeaves !== undefined && pendingLeaves.length === 0 && (
+            ) : (
               <div className="flex items-center justify-center p-5">
                 <p className="text-gray-500">No pending leaves</p>
               </div>
